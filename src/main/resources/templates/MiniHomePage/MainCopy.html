@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MINI HOME PAGE</title>
+  <link rel="stylesheet" href="/CSS/layout.css">
+  <link rel="stylesheet" href="/CSS/font.css">
+  <link rel="stylesheet" href="/CSS/MiniHome.css">
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+</head>
+<body>
+<div class="wrapper">
+  <div class="bookcover">
+    <div class="bookdot">
+      <div class="page">
+        <div class="profile-container">
+          <div class="header profile-title font-neo">
+            TODAY <span style="color:red">55</span>
+            |  TOTAL 99999</div>
+          <div class="box-profile-box">
+            <div class="profile-image">
+              <img class="profile-image-img" src="/images/cyworld1.jpg" alt="프로필이미지">
+            </div>
+            <div class="profile-text font-kyobohand">
+              ㄴr는.. 오늘도.. 눈물을.. 흘린ㄷr..★
+            </div>
+            <div class="profile-username font-kyobohand">
+              <span style="color: #0f1b5c">ㅎㅇ</span> (♪♬)
+            </div>
+            <div class="profile-dropdown">
+              <div class="dropdown-button">
+                <div class="dropdown-title">파도타기</div>
+                <div class="triangle-down"></div>
+              </div>
+              <div class="dropdown-content">
+                <a th:href="@{https://artto-backendit.tistory.com/}" target="_blank">블로그 바로가기</a>
+                <a th:href="@{https://www.facebook.com/profile.php?id=100050589571907}" target="_blank">페이스북
+                  바로가기</a>
+                <a th:href="@{https://www.instagram.com/jha_3o3/}" target="_blank">인스타그램 바로가기</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-container">
+          <div class="header content-title">
+            <div class="content-title-name">뽀ㄷH☆작렬b S2이쁘ㄴㅣS2네..'◡'✿</div>
+            <div class="content-title-url">https://artto-backendit.tistory.com/</div>
+          </div>
+
+          <div class="box content-box">
+            <div class="box-title">Updated news</div>
+            <div class="news-flex-box">
+              <div class="news-box">
+                <div class="news-row">
+                  <div class="news-category category-pic">사진첩</div>
+                  <div class="news-title">일バ6♥</div>
+                </div>
+                <div class="news-row">
+                  <div class="news-category category-post">게시판</div>
+                  <div class="news-title">네○l버클ㄹΓ우드♥</div>
+                </div>
+                <div class="news-row">
+                  <div class="news-category category-post">게시판</div>
+                  <div class="news-title">맛잇는つㅓ...♥</div>
+                </div>
+                <div class="news-row">
+                  <div class="news-category category-pic">사진첩</div>
+                  <div class="news-title"> øㅕ행중..♥</div>
+                </div>
+              </div>
+
+              <div class="update-box">
+                <div class="menu-row">
+                  <div class="menu-item">다이어리<span class="menu-num">6/13</span></div>
+                  <div class="menu-item">사진첩<span class="menu-num">6/13</span></div>
+                </div>
+                <div class="menu-row">
+                  <div class="menu-item">게시판<span class="menu-num">6/13</span></div>
+                  <div class="menu-item">방명록<span class="menu-num">6/13</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="miniroom">
+              <div class="box-title">Miniroom</div>
+              <div class="miniroom-gif-box">
+                <img src="/images/myroom.jpg" alt="미니룸"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="menu-container">
+          <div class="menu-button">
+            <a th:href="@{/MiniMain-view(userId=${loginUser.getId()})}">
+              <button>홈</button>
+            </a>
+            <a th:href="@{/MiniDiary-view(userId=${loginUser.getId})}">
+              <button>다이어리</button>
+            </a>
+            <a th:href="@{/MiniPicture-view(userId=${loginUser.getId})}">
+              <button>사진첩</button>
+            </a>
+            <a th:href="@{/MiniGuest-view(userId=${loginUser.getId})}">
+              <button>방명록</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="small-box-container">
+    <div class="Music-box"></div>
+  </div>
+</div>
+</body>
+</html>

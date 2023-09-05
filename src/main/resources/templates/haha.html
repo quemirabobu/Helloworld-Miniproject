@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&family=Libre+Baskerville&family=Single+Day&family=Stylish&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        #logout {
+            cursor: pointer;
+            background-color: #ffcc00;
+            height: 20px;
+            width: 90px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            position: absolute;
+            right: 0;
+            font-size: 11px;
+            color: #333;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+
+        #logout:hover {
+            background-color: #ff9900;
+            color: #fff;
+        }
+
+        #banner {
+            width: 100%;
+            height: 55px;
+            background-color: orange;
+            display: flex;
+            align-items: center;
+        }
+
+        .bannerbutton {
+            width: 12%;
+            background-color: #eaa013;
+            height: 100%;
+            align-items: center;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            border: solid white 3px;
+            margin-right: 5px;
+            font-size: 19px;
+            color: #ffffff;
+            text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        }
+
+        #content {
+            display: flex;
+            justify-content: center;
+        }
+
+        #chargebox {
+            width: 900px;
+            height: 600px;
+            background-color: #ffffff;
+            border: solid orange 3px;
+            display: flex;
+
+        }
+
+        .leftbanner {
+            width: 100px;
+            height: 40px;
+            background-color: #ffb571;
+            color: white;
+            border-radius: 2px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 4px;
+            border: solid #ff8d1c 1px;
+        }
+
+        #chargebox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+
+        #back {
+            position: relative;
+            height: 1000px;
+            background-image: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fs4RlP%2FbtskQjr1WRj%2FVGu2w6gF1Pm7qMg7SCUZt1%2Fimg.png');
+            background-color: rgba(255, 255, 255, 0.1); /* adjust opacity here */
+        }
+
+
+    </style>
+    <script>
+        let belongingsList;
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            console.log('시발 왜안되');
+
+            ///여기는 모든창이 로드 되자마자 내가 가지고있는 것들이 미니룸 사진 위에 뜨게한거.
+            belongingsList = JSON.parse(document.getElementById('belongingsData').textContent);
+
+            console.log(      JSON.parse(document.getElementById('belongingsData').textContent)    );
+//belonglist 텍스트를 json으로 바꿔서 객체 하나하나당 생성 가능.
+            belongingsList.forEach((obj) => {
+
+                let img = document.createElement('img');
+                console.log(obj.productEntity.pid + '하하하하하');
+                console.log(obj.productEntity);
+                console.log(obj.productEntity.productFileName);
+                img.id = 'dynamic-img-' + obj.productEntity.pid;  // 고유한 id를 추가합니다.
+                if(obj.productEntity.productCategory=='가구'){
+                    img.style.width = '60px';}else if(obj.productEntity.productCategory=='미니미'){
+                    //카테고리가 미니미면  크게를 홀쪽하게. 가구면 정사각형으로
+
+                    img.style.width='auto';
+                }
+                img.style.height = '60px';
+                img.src = obj.productEntity.productFileName;
+                img.style.position = 'absolute';  // div를 기준으로 배치
+                img.style.left = obj.productEntity.coordinateX + 'px';  // 좌표를 픽셀 단위로 설정
+                img.style.top = obj.productEntity.coordinateY + 'px';  // 좌표를 픽셀 단위로 설정
+
+                document.getElementById('container').appendChild(img);  // 이미지를 div에 추가
+                console.log(obj.productEntity.pid);
+
+
+
+
+
+
+//이미 화면에 적용된 아이템은 적용하기 버튼이 비활성화되게.
+                $("#" + obj.productEntity.pid).attr("disabled", true);
+
+            });
+        });
+
+        console.log('시발 왜안되');
+
+
+//
+//
+//
+//
+//
+        $(function () {
+            $(document).ready(function() {
+//
+//
+//
+//
+//
+// x버튼을 누르면 행해지는 행동
+                $('button:contains("x")').click(function() {
+                    var productId = $(this).attr('class');
+                    console.log(productId);
+                    $('#dynamic-img-' + productId).remove();  // 해당 id를 가진 이미지를 제거합니다.
+                    $.ajax({
+                        url: "/productdb-deapply",
+                        type: "post",
+                        data: {productId: productId},
+                        success: (obj) => {
+//x눌러서 없어진 아이템들은 미니룸 화면 위에 없어져야 하니까 리다이렉트를 함
+                            console.log(obj);
+                            window.location.href = "/haha"; // 페이지 리다이렉트
+                        },
+                        error: (err) => {
+                            console.log(err);
+                        }
+                    });
+
+                    // 클릭된 버튼만을 활성화합니다.
+                    //x버튼을 눌러서 적용하기가 취소되었으니까 적용하기 버튼이 활성화되야됨.
+                    $("#" + productId).attr("disabled", false);
+
+
+
+
+
+
+
+
+
+
+                });
+            });
+
+            $(document).on("click", ".apply", function () {
+                //적용하기 버튼을 눌렀을때 나타나는일
+                var productId = $(this).attr('id');  // 클릭된 버튼의 id 값을 가져옵니다.
+
+                // 이 버튼에 대한 참조를 저장합니다.
+                var $button = $(this);
+
+                $.ajax({
+                    url: "/product-apply",
+                    type: "post",
+                    data: {productId: productId},
+                    success: (obj) => {
+                        console.log(obj);
+
+
+
+
+//적용하기를 누르면 미니룸 화면 위로 아이템들이 좌표값으로 배치되야됨.
+                        window.location.href = "/haha"; // 페이지 리다이렉트
+
+                        // var img = document.createElement('img');
+                        // img.id = 'dynamic-img-' + obj.item.productEntity.pId;  // 고유한 id를 추가합니다.
+                        // img.style.width = '60px';
+                        // img.style.height = '60px';
+                        // img.src = obj.item.productEntity.productFileName;
+                        // img.style.position = 'absolute';  // div를 기준으로 배치
+                        // img.style.left = obj.productEntity.coordinateX + 'px';  // 좌표를 픽셀 단위로 설정
+                        // img.style.top = obj.productEntity.coordinateY + 'px';  // 좌표를 픽셀 단위로 설정
+                        //
+                        // document.getElementById('container').appendChild(img);  // 이미지를 div에 추가
+
+                        // 클릭된 버튼만 비활성화합니다.
+                        $button.attr("disabled",true);
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+                });
+
+
+
+
+
+                $.ajax({
+                    url: "/productdb-apply",
+                    type: "post",
+                    data: {productId: productId},
+                    success: (obj) => {
+
+                        console.log(obj);
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+                });
+//
+//
+//
+//
+//
+//
+//
+            });
+        });
+        function confirmLogout() {
+            if (confirm("정말 로그아웃 하시겠습니까?")) {
+                // "Yes"를 선택한 경우 로그아웃을 수행하는 URL로 리다이렉트
+                window.location.href = "/logout";
+            } else {
+                // "No"를 선택한 경우 아무 동작도 수행하지 않음
+            }
+        }
+
+    </script>
+</head>
+<body>
+
+<!--<p th:text="${session.keySet()}"> </p>-->
+<!--\-->
+<!--<p th:text="${session.cyuser}"></p>-->
+
+
+<div id="banner">
+    <div id="mingyupush" style="width: 24%"></div>
+    <div  onclick="window.location.href='/home'" style="height: 100%">
+    <img id="logo"
+         src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcdF9J4%2FbtskRufcTKP%2FmAHqe1WxB0eyLRqjxKR5kK%2Fimg.png"
+         style="height: 100%" alt="">
+    </div>
+    <div class="bannerbutton " id="myroom" style="background-color: rgba(255,209,190,0.81)" onclick="window.location.href='/myPage'">마이룸</div>
+    <div class="bannerbutton" id="purchase" onclick="window.location.href='/miniroom'">구매</div>
+    <div class="bannerbutton" id="charge" onclick="window.location.href='/cash'">충전</div>
+    <div class="logoutbox" style="position: absolute; top: 10px;right: 11px ">
+        <p style="margin-bottom: 3px;margin-top: 4px;font-size: 13px;
+            color: #5e5c5c;" th:text="${session.loginUser.userName} + '님 환영합니다'"></p>
+        <button id="logout" onclick="confirmLogout()">
+            로그아웃
+        </button>
+
+    </div>
+</div>
+<p style="font-size: 4px"></p>
+<div style="background-color: #ea8a8a;height: 4px; margin-top: 4px"></div>
+<!--<p style="font-size: 40px"></p>-->
+
+<!--<div id="belongingsData" th:attr="data: ${appliedbelongingsList}" style="display: none;"></div>-->
+
+
+<!--여기부터 시작-->
+
+<div style=" height: 800px" id="back">
+    <!--    한줄 띄고-->
+    <div style="height: 50px"></div>
+    <div id="content">
+        <div>
+
+
+            <!--            <p th:text="${appliedbelongingsList}"></p>-->
+
+
+            <div class="leftbanner" id="smalluseriinfo"
+                 style="background-color: white;color: #c71a01; font-weight: bold" onclick="window.location.href='/myPage'" >회원정보
+            </div>
+            <div class="leftbanner" id="smallmyroom" style="font-weight: bold">마이룸</div>
+            <div class="leftbanner" id="smallbgm"  onclick="window.location.href='/myroombgm'"  style="background-color: white;color: #c71a01;font-weight: bold">BGM
+            </div>
+
+
+        </div>
+        <div id="chargebox" style="flex-direction: column">
+
+            <div style="display: flex">
+                <!--                아래는 왼쪽에 내방꾸미기 미니미꾸미기 버튼있는곳-->
+                <div style="width: 300px;height: 300px;background-color: #ffffff; display: flex;flex-direction: column;justify-content: center;align-items: center">
+                    <button  onclick="window.location.href='/deco-wallpaper'" style="width: 190px;height: 40px; margin-top: 20px;margin-bottom: 20px">벽지도배</button>
+                    <button  onclick="window.location.href='/haha'" style="width: 190px;height: 40px;background-color: #ffb571;border: solid orange 1px; border-radius: 5px">
+                        내방 꾸미기
+                    </button>
+                    <button  onclick="window.location.href='/minimi-decoration'" style="width: 190px;height: 40px; margin-top: 20px;margin-bottom: 20px">미니미 꾸미기</button>
+
+                    <p style="color: #ea6e23;font-size: 27px">여러분의 방을 꾸며보세요</p>
+
+                </div>
+
+                <!--                아래코드는 오른쪽 미니룸-->
+                <div th:each="belongedwallpaper : ${wallpaperlist}"  id="container"
+                     style="width: 500px; height: 300px; background-color: #ffbcca; margin-left: 40px; position: relative;">
+                    <img style="width: 100%; height: 100%"
+                         th:src="@{${belongedwallpaper.productEntity.productFileName}}"
+                         alt="">
+                </div>
+
+
+            </div>
+            <div id="belongingsData" th:text="${appliedbelongingsList}" style="display: none;"></div>
+
+
+            <!--            여기는 아이템 있는곳-->
+            <div id="itembox"
+                 style="width: 840px;height: 250px;background-color: #ffffff;margin-top: 10px;display: flex;  flex-wrap: wrap;">
+
+
+                <!--                아래코드 이거 하나가 아이템 하나를 의미한다.-->
+                <div th:each="belongings : ${belongingsList}"
+                     style="width: 100px;height: 100px;background-color: #ffffff;border: solid white 2px;display: flex;flex-direction: column;justify-content: center;align-items: center">
+                    <img style="width: 60px; height: 60px"
+                         th:src="@{${belongings.productEntity.productFileName}}"
+                         alt="">
+                    <div style="font-size: 8px" th:text="${belongings.productEntity.productName}"></div>
+                    <input type="hidden" id="idinput" th:value="${belongings.productEntity.pId}">
+                    <input type="hidden" id="productidinput" th:value="${belongings.User.id}">
+
+                    <div style="display: flex">
+                        <button class="apply" th:id="${belongings.productEntity.pId}"
+                                style="width: 60px;height: 14px;font-size: 7px">적용하기
+                        </button>
+                        <button th:class="${belongings.productEntity.pId}" style=" align-items: center;  height: 15px;font-size: 8px; width: 10px; text-align: center; display: flex; justify-content: center; margin-left: 1px">
+                            x
+                        </button>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+
+<script>
+
+</script>
+</html>
+
+<!--<img th:src="@{/images/woodchair.png}" alt="">-->

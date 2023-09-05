@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINI HOME PAGE > GuestBook</title>
+    <script src="https://kit.fontawesome.com/ab54b9d48d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/CSS/font.css">
+    <link rel="stylesheet" href="/CSS/layout.css">
+    <link rel="stylesheet" href="/CSS/guestbook.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <style>
+        .pagination {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination-item {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="bookcover">
+        <div class="bookdot">
+            <div class="page">
+                <div class="profile-container">
+                    <div class="header profile-title font-neo">
+                        TODAY <span style="color:red" th:text="${todayVisitCount}"></span>
+                        |  TOTAL <span th:text="${totalVisitCount}"></span></div>
+                    <div class="box profile-box">
+                        <div class="profile-image">
+                            <img class="profile-image-img"  th:src="@{'/uploads/' + ${profileImg}}" alt="프로필이미지">
+
+                        </div>
+                        <div class="profile-text font-kyobohand">
+                            <p id="content" th:text="${loginUser.userPost.content}"></p>
+                        </div>
+                        <div class="profile-username font-kyobohand">
+                            <span style="color: #0f1b5c" th:text="${user.userName}"></span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <div class="dropdown-content">
+                                <select onchange="showUserData(this.value)" target="_blank">
+                                    <!-- 사용자를 선택하면 showUserData 함수를 호출 -->
+                                    <option value="">파도타기</option> <!-- 기본 선택 항목 -->
+                                    <option th:each="user : ${users}" th:value="${user.id}"
+                                            th:text="${user.getUserName}"></option>
+                                    <!-- 사용자 목록을 반복하여 각 사용자를 선택 항목으로 표시 -->
+                                </select>
+                                <script> <!-- 자바스크립트 코드 -->
+                                function showUserData(userId) { // 사용자의 id를 받아 해당 사용자의 게시글을 보여주는 함수
+                                    // window.location.href = '/MiniMain-view?userId=' + userId;
+
+
+                                    // 김은석이 바꾼거
+                                    window.location.href = '/letsgotohompie/' + userId;
+
+
+
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-container">
+                    <div class="header content-title">
+                        <div class="content-title-name" id="miniTitle" th:text="${loginUser.userPost.pageTitle}"></div>
+                        <div class="content-title-url"
+                             th:text=" 'https://'+ ${loginUser.userNickName} + '.helloWorld.com/'"></div>
+                    </div>
+                    <!---->
+
+                    <div class="box content-box">
+
+                        <div class="guestbook-scrollbox">
+
+                            <!--글쓰기-->
+                            <form action="/guestBook" method="post" class="formInput"> <!-- 게시글 작성 폼 -->
+                                <div class="guestbook-title">
+                                    <span style="color :#5c3ccf" th:text="${session.loginUser.userName}">  </span>
+                                </div>
+                                <div class="guestbook-contents">
+                                    <div class="guestbook-image background-1">
+                                        <img style="width: auto; height: 140px"
+                                             th:src="${(currentwriteravatar != null && currentwriteravatar.productEntity != null) ? currentwriteravatar.productEntity.productFileName : 'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcjAP7A%2Fbtsm8hsDVDs%2FRlQRvt6Q1Guk7W7GMIo2b1%2Fimg.png'}"
+                                             alt="프로필 사진"/>
+                                    </div>
+                                    <!--                  작성-->
+                                    <div class="guestbook-text">
+                                        <input type="text" name="content" class="contentinput"> <!-- 게시글 내용 입력란 -->
+                                        <input type="hidden" name="userId" th:value="${user.id}">
+                                        <!-- 현재 로그인한 사용자의 id를 숨겨진 input으로 전송 -->
+                                        <button type="submit" class="submit-button">작성</button> <!-- 게시글 작성 버튼 -->
+                                    </div>
+                                </div>
+                            </form>
+                            <!--방명록조회-->
+                            <div class="guestbook-box" style="border: 0.5px solid black; gap: 5px;"
+                                 th:each="guestbook:${guests}">
+                                <div class="guestbook-title">
+                                    no. <span th:text="${guestbook.userPostId}"></span>
+                                    <span style="color: #5c3ccf; margin-left: 7px;"
+                                          th:text="${guestbook.writer.getUserName()}"></span>
+                                    <a th:href="@{'/guestBook?userId=' + ${guestbook.writer.getId()}}"
+                                       onclick="window.location.href=this.href; return false;">
+                                        <i class="fas fa-home" style="margin-left: 7px; cursor: pointer"></i>
+                                    </a>
+                                    <div class="guestbook-date" style="margin-left: 7px;"
+                                         th:text="${#temporals.format(guestbook.regdate, 'yy-MM-dd HH:mm')}"></div>
+                                </div>
+                                <!-- 이미지, 내용 출력 -->
+                                <div class="guestbook-contents">
+                                    <div class="guestbook-image background-1">
+                                        <!-- 아바타 이미지를 가져오기 위해 avatars 맵을 사용합니다. -->
+                                        <img style="width: auto; height: 140px"
+                                             th:src="${(avatars[guestbook.writer] != null && avatars[guestbook.writer].productEntity != null) ? avatars[guestbook.writer].productEntity.productFileName : 'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcjAP7A%2Fbtsm8hsDVDs%2FRlQRvt6Q1Guk7W7GMIo2b1%2Fimg.png'}"
+                                             alt="프로필 사진"/>
+                                    </div>
+                                    <div class="guestbook-text" th:text="${guestbook.content}"></div>
+                                </div>
+                            </div>
+
+                            <!-- 페이징 처리 -->
+                            <nav class="pagination-nav">
+                                <ul class="pagination">
+                                    <li class="pagination-item" th:if="${currentPage > 0}">
+                                        <a class="pagination-link"
+                                           th:href="@{/MiniGuest-view(userId=${user.id}, page=${currentPage - 1})}">이전</a>
+                                    </li>
+                                    <li class="pagination-item">
+                                        <span class="pagination-link"
+                                              th:text="${currentPage + 1} + '/' + ${totalPages}"></span>
+                                    </li>
+                                    <li class="pagination-item" th:if="${currentPage < totalPages - 1}">
+                                        <a class="pagination-link"
+                                           th:href="@{/MiniGuest-view(userId=${user.id}, page=${currentPage + 1})}">다음</a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-container">
+                    <div class="menu-button">
+                        <a th:href="@{/gotohomebutdontrefreshmusiclist(userId=${loginUser.getId()})}">
+                            <button>홈</button>
+                        </a>
+                        <a th:href="@{/MiniDiary-view(userId=${loginUser.getId()})}">
+                            <button>다이어리</button>
+                        </a>
+                        <a th:href="@{/MiniPicture-view(userId=${loginUser.getId()})}">
+                            <button>사진첩</button>
+                        </a>
+                        <a th:href="@{/MiniGuest-view(userId=${loginUser.getId()})}">
+                            <button>방명록</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="small-box-container">
+        <div class="Music-box">
+
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

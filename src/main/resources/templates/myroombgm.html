@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&family=Libre+Baskerville&family=Single+Day&family=Stylish&display=swap"
+          rel="stylesheet">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+
+    <style>
+        body {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        #logout {
+            cursor: pointer;
+            background-color: #ffcc00;
+            height: 20px;
+            width: 90px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            position: absolute;
+            right: 0;
+            font-size: 11px;
+            color: #333;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #logout:hover {
+            background-color: #ff9900;
+            color: #fff;
+        }
+        #banner {
+            width: 100%;
+            height: 55px;
+            background-color: orange;
+            display: flex;
+            align-items: center;
+        }
+
+        .bannerbutton {
+            width: 12%;
+            background-color: #eaa013;
+            height: 100%;
+            align-items: center;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            border: solid white 3px;
+            margin-right: 5px;
+            font-size: 19px;
+            color: #ffffff;
+            text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        }
+
+        #content {
+            display: flex;
+            justify-content: center;
+        }
+
+        #chargebox {
+            width: 900px;
+            height: 600px;
+            background-color: #ffffff;
+            border: solid orange 3px;
+            display: flex;
+
+        }
+
+        .leftbanner {
+            width: 100px;
+            height: 40px;
+            background-color: #ffb571;
+            color: white;
+            border-radius: 2px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 4px;
+            border: solid #ff8d1c 1px;
+        }
+
+        #chargebox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+
+        #back {
+            position: relative;
+            height: 1000px;
+            background-image: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fs4RlP%2FbtskQjr1WRj%2FVGu2w6gF1Pm7qMg7SCUZt1%2Fimg.png');
+            background-color: rgba(255, 255, 255, 0.1); /* adjust opacity here */
+        }
+
+        td {
+            border-left: solid #ff8d1c 1px;
+            padding-right: 5px;
+            padding-left: 5px;
+
+        }
+
+    </style>
+
+    <script>
+
+        function confirmLogout() {
+            if (confirm("정말 로그아웃 하시겠습니까?")) {
+                // "Yes"를 선택한 경우 로그아웃을 수행하는 URL로 리다이렉트
+                window.location.href = "/logout";
+            } else {
+                // "No"를 선택한 경우 아무 동작도 수행하지 않음
+            }
+        }
+
+       let belongingsList;
+
+       document.addEventListener('DOMContentLoaded', (event) => {
+
+
+//            $(".here").each(function() {
+//                let zzz = $(this).attr("id");
+//                let z = zzz.replace("herename", "");  // "imagebox"를 제거합니다.
+// console.log(z)
+//
+//
+//                $(".player").each(function() {
+//                    console.log(z == $(this).attr("id"));
+//                    console.log($(this).attr("id"));
+//                    if (z == $(this).attr("id")) {
+//                        console.log('십울얼');
+//                        $(this).append(`
+//                 <div style="margin: 3px; width: 40px; height: 20px; background-color: #ff5c43; border-radius: 2px; text-align: center">
+//                     재생중
+//                 </div>
+//             `);
+//                    }
+//                });
+//            });
+
+           // $(".here").each(function() {
+           //     let currentHereElement = $(this);
+           //     let zzz = currentHereElement.attr("id");
+           //     let z = zzz.replace("herename", "");
+           //
+           //     $(".player").each(function() {
+           //         if (z == $(this).attr("id")) {
+           //             currentHereElement.append(`
+           //      <div style="margin: 3px; width: 40px; height: 20px; background-color: #ff5c43; border-radius: 2px; text-align: center">
+           //          재생중
+           //      </div>
+           //  `);
+           //         }
+           //     });
+           // });
+
+
+
+
+
+           // <td className="here" th:id="'herename' + ${havingmusiclist.productEntity.pId}"
+           //     style="display: flex;justify-content: center;align-items: center"><img
+           //     style="width: 30px;height: 30px"
+           //     src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVjgLN%2FbtskRRI7oRu%2FZNekfirNZcJHBQXO3fkylK%2Fimg.jpg"
+           //     alt="">
+           //     <div
+           //         style=" margin: 3px;  width: 40px;height: 20px;background-color: #ff5c43;border-radius: 2px;text-align: center">
+           //         재생중
+           //     </div>
+           // </td>
+
+
+
+
+
+
+
+           // <div style=" margin: 3px;  width: 40px;height: 20px;background-color: #ff5c43;border-radius: 2px;text-align: center">
+           //     재생중
+           // </div>
+
+
+           // <td className="here" th:id="'herename' + ${havingmusiclist.productEntity.pId}"
+           //     style="display: flex;justify-content: center;align-items: center">
+
+           //
+           // <source th:if="${appliedmusic.productEntity != null}" className="player"
+           //         th:id="${appliedmusic.productEntity.pId}" th:src="@{${appliedmusic.productEntity.productFileName}}"
+           //         type='audio/mp3'/>
+           // <source th:unless="${appliedmusic.productEntity != null}" type='audio/mp3'/>
+
+
+
+
+console.log(document.getElementById('belongingsData')!==null);
+
+if(document.getElementById('belongingsData')!==null) {
+    ///여기는 모든창이 로드 되자마자 내가 가지고있는 것들이 미니룸 사진 위에 뜨게한거.
+    belongingsList = JSON.parse(document.getElementById('belongingsData').textContent);
+
+    console.log(belongingsList);
+//belonglist 텍스트를 json으로 바꿔서 객체 하나하나당 생성 가능.
+
+    if(belongingsList.productEntity!==null){
+    let name = belongingsList.productEntity.pid;
+
+
+    $(".deapplybutton" + name).attr("disabled", true);
+    $("#" + name).attr("disabled", true);}
+
+}else{
+    console.log("belongingsData는 null임");
+}
+
+
+       });
+       // <td  th:id="'musicname'+ ${havingmusiclist.Id.productId}"
+       $(function () {
+// x버튼을 누르면 행해지는 행동
+           $('button:contains("x")').click(function() {
+               var productId = $(this).attr('class');
+               var pid = productId.replace("deapplybutton", "");  // "imagebox"를 제거합니다.
+               $.ajax({
+                   url: "/productdb-deapply",
+                   type: "post",
+                   data: {productId: pid},
+                   success: (obj) => {
+//x눌러서 없어진 아이템들은 미니룸 화면 위에 없어져야 하니까 리다이렉트를 함
+                       console.log(obj);
+                       location.reload();
+                   },
+                   error: (err) => {
+                       console.log(err);
+                   }
+               });
+
+               // 클릭된 버튼만을 활성화합니다.
+               //x버튼을 눌러서 적용하기가 취소되었으니까 적용하기 버튼이 활성화되야됨.
+               // $("#" + productId).attr("disabled", false);
+           });
+
+       })
+       $(document).on("click", ".applybutton", function () {
+           var productId = $(this).attr('id');  // 클릭된 요소의 id 값을 가져옵니다.
+
+           $.ajax({
+               url: "/productdb-apply",
+               type: "post",
+               data: {productId: productId},
+               success: (obj) => {
+                   console.log(obj);
+
+                   // $("div[style='margin-left: 10px;margin-top: 10px']").text(obj.item.productName);
+                   //
+                   // // Update the source of the audio
+                   // $(".haha source").attr("src", obj.item.productPath);
+                   // $(".haha")[0].load();
+                   location.reload();
+                   $("#" + productId).attr("disabled", false);
+                   // ajaxMusicList();
+               },
+               error: (err) => {
+                   console.log(err);
+               }
+           });
+       });
+
+
+
+
+
+
+
+
+       $(document).on("click", ".representm", function () {
+
+           var productId2 = $(".singsingsing").attr('id');  // 클릭된 요소의 id 값을 가져옵니다.
+console.log(productId2);
+           $.ajax({
+               url: "/productdb-apply",
+               type: "post",
+               data: {productId: productId2},
+               success: (obj) => {
+                   console.log(obj);
+
+                   // $("div[style='margin-left: 10px;margin-top: 10px']").text(obj.item.productName);
+                   //
+                   // // Update the source of the audio
+                   // $(".haha source").attr("src", obj.item.productPath);
+                   // $(".haha")[0].load();
+                   // ajaxMusicList();
+               },
+               error: (err) => {
+                   console.log(err);
+               }
+           });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           var productId = $(this).attr('id');  // 클릭된 요소의 id 값을 가져옵니다.
+           var pid = productId.replace("representm", "");  // "imagebox"를 제거합니다.
+console.log(pid);
+console.log('hahahaha');
+           $.ajax({
+               url: "/makeitrepresentativemusic",
+               type: "post",
+               data: {productId: pid},
+               success: (obj) => {
+                   console.log(obj);
+                   location.reload();
+
+
+                   // $("div[style='margin-left: 10px;margin-top: 10px']").text(obj.item.productName);
+                   //
+                   // // Update the source of the audio
+                   // $(".haha source").attr("src", obj.item.productPath);
+                   // $(".haha")[0].load();
+                   // ajaxMusicList();
+               },
+               error: (err) => {
+                   console.log(err);
+               }
+           });
+       });
+
+
+       $(document).on("click", ".musicname", function () {
+           var productId = $(this).attr('id');  // 클릭된 요소의 id 값을 가져옵니다.
+           var pid = productId.replace("musicname", "");  // "imagebox"를 제거합니다.
+           console.log(pid);
+           $(".here").each(function() {
+               let currentHereElement = $(this);
+               let zzz = currentHereElement.attr("id");
+               let z = zzz.replace("herename", "");
+               $(".player").each(function() {
+                       // 'musicname' prefix와 id를 결합하여 전체 id를 얻습니다.
+                       let musicnameId = 'musicname' + z;
+                       $("#" + musicnameId).css("color", "initial");
+               });
+           });
+           $.ajax({
+               url: "/musicapplyforplay",
+               type: "post",
+               data: {productId: pid, uid: $("#idinput").val()},
+               success: (obj) => {
+//x눌러서 없어진 아이템들은 미니룸 화면 위에 없어져야 하니까 리다이렉트를 함
+                   console.log(obj);
+                   console.log(obj.item.productEntity.productName);
+                   console.log(obj.item.productEntity.productFileName);
+                   // console.log('이게 아이템'+obj.item.productId);
+                   $("div[style='margin-left: 10px;margin-top: 10px']").text(obj.item.productEntity.productName);
+                   // Update the source of the audio
+                   $(".haha source").attr("src", obj.item.productEntity.productFileName);
+console.log(obj.item.productEntity);
+                   $(".haha source").attr("id", obj.item.productEntity.pid);
+                   console.log(  '이게 소스의 피아이디'+   obj.item.productEntity.pid);
+                   $(".haha")[0].load();
+                   $(".here").each(function() {
+                       let currentHereElement = $(this);
+                       let zzz = currentHereElement.attr("id");
+                       let z = zzz.replace("herename", "");
+
+                       $(".player").each(function() {
+                           if (z == $(this).attr("id")) {
+                               // 'musicname' prefix와 id를 결합하여 전체 id를 얻습니다.
+                               let musicnameId = 'musicname' + z;
+                               $("#" + musicnameId).css("color", "red");
+                           }
+                       });
+                   });
+                   // 이걸로 (바꿔줘)
+
+//                     <audio controls className="haha"
+//                            style="width: 250px; height: 40px; margin-top: 10px;margin-left: 10px">
+//                         <source th:src="@{${appliedmusic.productPath}}
+// " type='audio/mp3'/>
+               },
+               error: (err) => {
+                   console.log(err);
+               }
+           });
+       });
+
+       //     const ajaxMusicList = () => {
+       //         $.ajax({
+       //            url: '/music-list',
+       //            type: 'get',
+       //             data: {
+       //               productCate: 4
+       //             },
+       //             success: (obj) => {
+       //                console.log(obj);
+       //
+       //                $(".boxboxbox").html();
+       //
+       //                let htmlStr = "";
+       //                 htmlStr += `<div style="text-align: center; margin-bottom: 20px"><p>내 리스트에 적용된 음악 5</p></div>
+       //                     <table>`;
+       //                for(let i = 0; i < obj.items.length; i++) {
+       //
+       //                         htmlStr += `<tr>
+       //                             <td><img style="width: 30px;height: 30px"
+       //                                      src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVjgLN%2FbtskRRI7oRu%2FZNekfirNZcJHBQXO3fkylK%2Fimg.jpg"
+       //                                       alt=""></td>
+       //
+       //
+       //                             <td style="display: flex">${obj.items[i].productName}
+       //
+       //                             </td>
+       // <td>${obj.items[i].productName.split('_')[0]}</td>
+       //                             <td>
+       //                                 <button>x</button>
+       //                             </td>
+       //                         </tr>`;
+       //
+       //
+       //
+       //
+       //
+       //                }
+       //                htmlStr += `</table>`;
+       //
+       //                $(".boxboxbox").html(htmlStr);
+       //             },
+       //             error: (err) => {
+       //                console.log(err)
+       //             }
+       //         });
+       //     }
+
+
+    </script>
+</head>
+<body>
+<div id="banner">
+    <div id="mingyupush" style="width: 24%"></div>
+    <div  onclick="window.location.href='/home'" style="height: 100%">
+    <img id="logo"
+         src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcdF9J4%2FbtskRufcTKP%2FmAHqe1WxB0eyLRqjxKR5kK%2Fimg.png"
+         style="height: 100%" alt="">
+    </div>
+    <div class="bannerbutton" id="myroom" style="background-color: rgba(255,209,190,0.81)" onclick="window.location.href='/myPage'">마이룸</div>
+    <div class="bannerbutton" id="purchase" onclick="window.location.href='/miniroom'">구매</div>
+    <div class="bannerbutton" id="charge" onclick="window.location.href='/cash'">충전</div>
+    <div class="logoutbox" style="position: absolute; top: 10px; right: 11px ">
+        <p style="margin-bottom: 3px;margin-top: 4px;font-size: 13px;
+            color: #5e5c5c;" th:text="${session.loginUser.userName} + '님 환영합니다'"></p>
+        <button id="logout"onclick="confirmLogout()">
+            로그아웃
+        </button>
+
+    </div>
+</div>
+<p style="font-size: 4px"></p>
+<div style="background-color: #ea8a8a;height: 4px; margin-top: 4px"></div>
+<!--<p style="font-size: 40px"></p>-->
+
+
+<!--여기부터 시작-->
+
+<div style=" height: 800px" id="back">
+    <!--    한줄 띄고-->
+    <div style="height: 50px"></div>
+    <div id="content">
+        <div>
+            <div class="leftbanner" id="smalluseriinfo"
+                 style="background-color: white;color: #c71a01; font-weight: bold" onclick="window.location.href='/myPage'">회원정보
+            </div>
+            <div class="leftbanner" id="smallmyroom"  onclick="window.location.href='/haha'"   style="background-color: white;color: #c71a01;font-weight: bold">
+                마이룸
+            </div>
+            <div class="leftbanner" id="smallbgm" style="font-weight: bold" onclick="window.location.href='/myroombgm'">BGM</div>
+
+
+        </div>
+        <!--        전체상자-->
+        <div id="chargebox" style="display: flex;">
+            <!--왼쪽상자-->
+            <div style="width: 50%;height: 98%;background-color: #ffffff;">
+                <!--왼쪽첫번째상자-->
+                <div style="width: 98%;height: 40%;background-color: #999999;display: flex;border: solid black 2px;margin-top: 5px">
+                    <!--                    앨범커버들어있는곳-->
+                    <div style="width: 40%;height: 100%;background-color: #ffffff; display: flex;justify-content: center;align-items: center">
+                        <img style="width: 160px;height: 160px"
+                             src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVjgLN%2FbtskRRI7oRu%2FZNekfirNZcJHBQXO3fkylK%2Fimg.jpg"
+                             alt="">
+                    </div>
+                    <!--                    대표음악, 플레이어가 있는곳-->
+                    <div style="width: 60%;height: 100%;background-color: #ffffff; display: flex; flex-direction: column;justify-content: center">
+
+
+                        <div style="margin-left: 10px; width: 120px; height: 30px; background-color: #ea6e23;text-align: center;display: flex;align-items: center;justify-content: center;border-radius: 4px;margin-bottom: 4px">
+                            현재 재생중인음악
+                        </div>
+
+
+<!--                        <div style="margin-left: 10px;margin-top: 10px" th:text="${appliedmusic.productEntity.productName}"></div>-->
+<!--                        <audio controls class="haha"-->
+<!--                               style="width: 250px; height: 40px; margin-top: 10px;margin-left: 10px">-->
+<!--                            <source th:src="@{${appliedmusic.productEntity.productFileName}}-->
+<!--" type='audio/mp3'/>-->
+
+
+<!--                        <source th:if="${appliedmusic.productEntity != null}" th:src="@{${appliedmusic.productEntity.productFileName}}" type='audio/mp3'/>-->
+<!--                        <source th:unless="${appliedmusic.productEntity != null}" type='audio/mp3'/>-->
+
+                        <!--                            <source th:src="@{${appliedmusic.productEntity.productFileName}}-->
+                        <!--" type='audio/mp3'/>-->
+
+
+                        <!--                        <source th:if="${appliedmusic.productEntity != null}" th:src="@{${appliedmusic.productEntity.productFileName}}" type='audio/mp3'/>-->
+                        <!--                        <source th:unless="${appliedmusic.productEntity != null}" type='audio/mp3'/>-->
+
+                        <!--                        </audio>-->
+<!--                    </div>-->
+
+
+
+                    <div style="margin-left: 10px;margin-top: 10px" th:text="${appliedmusic.productEntity != null ? appliedmusic.productEntity.productName : ''}"></div>
+                    <audio controls class="haha"
+                           style="width: 250px; height: 40px; margin-top: 10px;margin-left: 10px">
+                        <source th:if="${appliedmusic.productEntity != null}"   class="player"  th:id="${appliedmusic.productEntity.pId}" th:src="@{${appliedmusic.productEntity.productFileName}}" type='audio/mp3'/>
+                        <source th:unless="${appliedmusic.productEntity != null}" type='audio/mp3'/>
+
+                    </audio>
+                </div>
+
+
+
+
+
+
+
+                </div>
+                <!--왼쪽두번째상자-->
+                <div style="width: 100%;height: 58%;background-color: #ffffff;display: flex;justify-content: center;align-items: center;flex-direction: column; ">
+                    <p style="margin-bottom: 20px">내가 가지고있는 음악 목록</p>
+                    <table>
+                        <tr th:each="havingmusiclist : ${belongingsList}">
+                            <td class="here"  th:id="'herename' + ${havingmusiclist.productEntity.pId}"   style="display: flex;justify-content: center;align-items: center"><img
+                                    style="width: 30px;height: 30px"
+                                    src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVjgLN%2FbtskRRI7oRu%2FZNekfirNZcJHBQXO3fkylK%2Fimg.jpg"
+                                    alt="">
+<!--                                                                <div style=" margin: 3px;  width: 40px;height: 20px;background-color: #ff5c43;border-radius: 2px;text-align: center">-->
+<!--                                                                    재생중-->
+<!--                                                                </div>-->
+                            </td>
+
+                            <td class="musicname" th:id="'musicname'+ ${havingmusiclist.productEntity.pId}"
+                                th:text="${havingmusiclist.productEntity.productName}"></td>
+                            <input type="hidden" id="idinput" th:value="${havingmusiclist.User.id}">
+                            <td th:text="${#strings.substringBefore(havingmusiclist.productEntity.productName, '_')}"></td>
+
+                            <td>
+                                <button class="applybutton" th:id="${havingmusiclist.productEntity.pId}">적용하기</button>
+
+
+
+
+                            </td>
+                        </tr>
+
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+            <!--오른쪽상자-->
+            <div style="width: 48%;height: 98%;background-color: #c71a01;display: flex;flex-direction: column">
+
+                <!--오른쪽첫번째상자-->
+                <div style="width: 100%;height: 50%;background-color: #ffffff;display: flex;flex-direction: column;justify-content: center">
+                    <div style="text-align: center; margin-bottom: 20px"><p>홈피적용음악 Top 5</p></div>
+                    <table>
+
+                        <tr  th:each="top5 : ${top5productentity}">
+                            <td th:style="'color:' + (${top5Stat.count} == 1 ? 'red' : 'blue')" th:text="${top5Stat.count} + ' 위 '"></td>
+                            <td><img style="width: 30px;height: 30px"
+                                     src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVjgLN%2FbtskRRI7oRu%2FZNekfirNZcJHBQXO3fkylK%2Fimg.jpg"
+                                     alt=""></td>
+                            <td th:text="${top5.productName}">alicia Keys-No one</td>
+                            <td th:text="${#strings.substringBefore(top5.productName, '_')}" >Alicia Keys</td>
+
+                        </tr>
+
+
+
+                    </table>
+                </div>
+                <div style="text-align: center; background-color: white;">홈페이지 대표음악</div>
+                <p></p>
+                <p></p>
+
+                <div class="singsingsing"
+                     th:id="${representativemusic.productEntity != null ? representativemusic.productEntity.pId : ''}"
+                     style="text-align: center; background-color: white; color: #ff0000;"
+                     th:text="${representativemusic.productEntity != null ? '->  '+ #strings.substringBefore(representativemusic.productEntity.productName, '_') + '  님이 부릅니다  ' + #strings.substringAfter(representativemusic.productEntity.productName, '_') : ''}">
+                </div>
+                <p></p>
+
+
+                <!--오른쪽두번째상자-->
+                <div class="boxboxbox"
+                     style="width: 100%;height: 50%;background-color: #ffffff;display: flex;flex-direction: column;justify-content: center">
+                    <div style="text-align: center; margin-bottom: 20px"><p>내 리스트에 적용된 음악 5</p></div>
+                    <table>
+                        <tr th:each="appliedmusics : ${appliedmusiclist}">
+                            <td><img style="width: 30px;height: 30px"
+                                     src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVjgLN%2FbtskRRI7oRu%2FZNekfirNZcJHBQXO3fkylK%2Fimg.jpg"
+                                     트 alt=""></td>
+
+
+                            <div id="belongingsData" th:text="${representativemusic2}" style="display: none;"></div>
+
+                            <td class="representm" th:id="'representm'+${appliedmusics.productEntity.pId}" style="display: flex" th:text="${appliedmusics.productEntity.productName}">
+
+                            </td>
+                            <td th:text="${#strings.substringBefore(appliedmusics.productEntity.productName, '_')}"></td>
+                            <!--                            <td>3:53</td>-->
+                            <td>
+                                <button th:class="'deapplybutton' + ${appliedmusics.productEntity.pId}">x</button>
+<!--                                <button >x</button>-->
+
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+</html>

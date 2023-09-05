@@ -1,0 +1,227 @@
+/*.main-login-page img{*/
+/*    background-size: cover;*/
+/*    background-repeat: no-repeat;*/
+/*    background-attachment: fixed;*/
+/*    background-position: center center;*/
+/*    top: 0px;*/
+/*    left: 0px;*/
+/*    margin: 0px;*/
+/*    padding: 0px;*/
+/*    overflow: hidden;*/
+/*    width: 100%;*/
+/*}*/
+
+.Slides-background {
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 높이에 맞게 조절 */
+}
+
+.slideshow-image {
+    border-radius: 3%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mySlides {
+    border-radius: 3%;
+    width: 1500px;
+    height: 900px;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1s ease-in-out; /* 이미지 전환에 대한 애니메이션 효과 설정 */
+    box-shadow: 0px 15px 15px rgba(0, 0, 0, 0.5);
+}
+
+.slideshow-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin: auto;
+    width: 100px;
+    height: 100px;
+}
+
+body{
+    background-color: orange;
+    margin: 0;
+    padding: 0;
+}
+
+/*------------로그인 폼---------------*/
+
+.logo-container {
+    text-align: center; /* 이미지를 가운데 정렬 */
+}
+
+.logo-container img {
+    max-width: 100%; /* 이미지가 부모 요소를 넘어가지 않도록 최대 너비 설정 */
+}
+
+
+.login-wrapper {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    width: 420px;
+    height: 600px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#login-form > input{
+    width: 100%;
+    height: 48px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    background-color: #F8F8F8;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-container label {
+    font-family: 'Stylish', sans-serif;
+    font-size: medium;
+    font-weight: bold;
+    width: 70px;
+    height: 48px;
+    padding-right: 10px;
+    margin-right: 15px;
+    text-align: right;
+    display: flex;
+    background-color: #ff8d1c;
+    border-radius: 10%;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-container input {
+    flex: 1;
+    height: 48px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background-color: #F8F8F8;
+}
+
+.button-container{
+    display: flex;
+    justify-content: center;
+}
+
+#login-form > input::placeholder{
+    color: #D2D2D2;
+}
+.button-container > input[type="submit"]{
+    color: #fff;
+    font-size: 16px;
+    background-color: orange;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    height: 45px;
+    width: 100px;
+    justify-content: center;
+    border-radius: 10%;
+}
+
+#login-form > input[type="checkbox"]{
+    display: none;
+}
+#login-form > label{
+    color: #999999;
+}
+#login-form input[type="checkbox"] + label{
+    cursor: pointer;
+    padding-left: 26px;
+    background-image: url("../images/pngwing.com.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+#login-form input[type="checkbox"]:checked + label{
+    background-image: url("../images/pngwing.check.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* 소셜로그인 폼*/
+.social-login-container {
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 10px;
+    display: inline-flex; /* 이미지를 통으로 감싸기 위해 flexbox를 사용 */
+    align-items: center; /* 세로 정렬 */
+    background-color: whitesmoke; /* 박스의 배경색 */
+    padding: 5px; /* 내부 여백 조정 */
+    border-radius: 15px; /* 테두리를 둥글게 만들기 위해 사용 */
+}
+
+.social-logo {
+    /*display: inline-block; !* 옆으로 나란히 배치 *!*/
+    margin: 0 15px; /* 이미지 간격 조정 */
+}
+
+.social-logo img {
+    width: 55px; /* 이미지 너비 조정 */
+    height: 55px; /* 이미지 높이 조정 */
+}
+
+
+/*회원가입 및 찾기 폼*/
+
+.look-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.look-container .button1{
+    margin-right: 10px;
+    text-decoration: none;
+    border-bottom: none;
+    display: inline-block;
+    color: black;
+    font-weight: bold;
+}
+.look-container .button2 {
+    margin-right: 10px;
+    text-decoration: none;
+    border-bottom: none;
+    display: inline-block;
+    color: #738186;
+}
+/*footer*/
+footer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    color: #999999;
+}
+
+footer .footer-gif img {
+    max-width: 150px; /* 이미지의 최대 너비 조정 */
+    height: auto;
+}
+
+
+

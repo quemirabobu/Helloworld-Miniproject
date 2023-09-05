@@ -1,0 +1,154 @@
+.content-photo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-title {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 2rem;
+    width: 450px;
+    margin-right: 30px;
+    padding: 0 1rem;
+    font-family: "NeoDunggeunmo";
+    background-color: rgba(216, 216, 216, 0.932);
+    list-style-type: none;
+}
+
+
+.photo-title span {
+    margin-right: 10px;
+}
+
+.photo-title .title {
+    margin-left: 10px;
+}
+
+.photo-image img{
+    margin-top: 15px;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+    height: 400px;
+}
+
+ ul {
+    list-style-type: none;
+}
+
+/*스크롤바가 안생기길래 임의로 조정*/
+.content-box {
+    width: 550px; /* 원하는 가로 크기로 설정 */
+    height: 400px; /* 원하는 세로 크기로 설정 */
+    overflow: auto; /* 스크롤바 표시 옵션, 필요에 따라 scroll로 변경 가능 */
+}
+
+.upload-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color:blanchedalmond;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /*margin-right: 400px;*/
+}
+
+.upload-btn > a {
+    color: white;
+    text-decoration: none;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+.upload-btn:hover {
+    background-color:  #b4d1da;
+}
+
+.upload-btn:active {
+    background-color: #999;
+}
+
+.delete-button{
+    padding: 5px 5px;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: "Noto Sans KR", sans-serif;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    justify-content: flex-end;
+
+    /*    margin-left: 390px;*/
+}
+
+.delete-button:hover{
+    background-color:  #b4d1da;
+}
+
+.delete-button:active {
+    background-color: #999;
+}
+
+/*사진첩 페이징 버튼 꾸밈*/
+.pagination-nav {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination-item {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.pagination-link {
+    display: inline-block;
+    padding: 5px;
+    font-size: 12px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 50%;
+    background-color: #f2f2f2;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+.pagination-link:hover {
+    background-color: #ddd;
+}
+
+.pagination-link.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.pagination-link.active {
+    background-color: #555;
+    color: #fff;
+}
+
+
+.no-photo-image {
+    margin-left: 50px;
+
+    width: 250px;
+    height: 250px;
+}

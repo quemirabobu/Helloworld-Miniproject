@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photo</title>
+    <link rel="stylesheet" href="/CSS/layout.css">
+    <link rel="stylesheet" href="/CSS/font.css">
+    <link rel="stylesheet" href="/CSS/uploadFile.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="bookcover">
+        <div class="bookdot">
+            <div class="page">
+                <div class="profile-container">
+                    <div class="header profile-title font-neo">
+                        TODAY <span style="color:red" th:text="${todayVisitCount}"></span>
+                        |  TOTAL <span th:text="${totalVisitCount}"></span></div>
+
+                    <div class="box profile-box">
+                        <div class="profile-image">
+                            <img class="profile-image-img"  th:src="@{'/uploads/' + ${profileImg}}" alt="프로필이미지">
+
+                        </div>
+                        <div class="profile-text font-kyobohand">
+                            <p id="content" th:text="${loginUser.userPost.content}"></p>
+                        </div>
+                        <div class="profile-username font-kyobohand">
+                            <span style="color: #0f1b5c" th:text="${loginUser.userNickName}"></span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <div class="dropdown-content">
+                                <select onchange="showUserData(this.value)" target="_blank">
+                                    <!-- 사용자를 선택하면 showUserData 함수를 호출 -->
+                                    <option value="">파도타기</option> <!-- 기본 선택 항목 -->
+                                    <option th:each="user : ${users}" th:value="${user.id}"
+                                            th:text="${user.getUserName}"></option>
+                                    <!-- 사용자 목록을 반복하여 각 사용자를 선택 항목으로 표시 -->
+                                </select>
+                                <script> <!-- 자바스크립트 코드 -->
+                                function showUserData(userId) { // 사용자의 id를 받아 해당 사용자의 게시글을 보여주는 함수
+                                    window.location.href = '/MiniMain-view?userId=' + userId;
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-container">
+                    <div class="header content-title">
+                        <div class="content-title-name" id="miniTitle" th:text="${loginUser.userPost.pageTitle}"
+                             th:utext="${loginUser.userPost.pageTitle}" aria-readonly="true"></div>
+                        <div class="content-title-url"
+                             th:text=" 'https://'+ ${loginUser.userNickName} + '.helloWorld.com/'"></div>
+                    </div>
+
+                    <!---------------------사진첩 구현-------------------------------->
+
+                    <div class="box content-box">
+                        <div class="content-photo">
+                            <form method="POST" action="/Photo-upload" enctype="multipart/form-data">
+                                <input type="text" id="galleryTitle" name="title" placeholder="제목을 입력해주세요" required><br>
+                                <div class="file-input-wrapper">
+                                    <label class="file-input-label" for="photoFile">사진 선택</label>
+                                    <input type="file" class="galleryFile" name="file" id="photoFile" required>
+                                </div>
+                                <br>
+                                <div class="image-preview-container">
+                                    <img id="previewImage" src="#" alt="미리보기 이미지" style="display: none;">
+                                </div>
+                                <br>
+                                <!-- 세션에서 사용자 ID를 가져와서 숨겨진 필드에 적용 -->
+                                <input type="hidden" name="userId" th:value="${loginUser.id}">
+                                <button type="submit" class="gallerySubBtn">업로드</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-container">
+                    <div class="menu-button">
+                        <a th:href="@{/MiniMain-view(userId=${loginUser.getId()})}">
+                            <button>홈</button>
+                        </a>
+                        <a th:href="@{/MiniDiary-view(userId=${loginUser.getId})}">
+                            <button>다이어리</button>
+                        </a>
+                        <a th:href="@{/MiniPicture-view(userId=${loginUser.getId})}">
+                            <button>사진첩</button>
+                        </a>
+                        <a th:href="@{/MiniGuest-view(userId=${loginUser.getId})}">
+                            <button>방명록</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="small-box-container">
+        <div class="Music-box"></div>
+    </div>
+</div>
+
+<script>
+    // 파일 선택 시 미리보기 이미지 업데이트
+    const fileInput = document.getElementById('photoFile');
+    const previewImage = document.getElementById('previewImage');
+
+    fileInput.addEventListener('change', function () {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.src = '#';
+            previewImage.style.display = 'none';
+        }
+    });
+
+
+    // JavaScript 코드를 사용하여 사용자 ID를 가져와서 input 요소의 value에 할당
+    let userIdInput = document.getElementById('userId');
+    userIdInput.value = '${loginUser.id}';
+
+
+</script>
+</body>
+</html>

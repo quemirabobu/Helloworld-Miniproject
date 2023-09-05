@@ -1,0 +1,188 @@
+.content-box{
+    position: relative;
+}
+
+.calendar{
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    font-family: "NeoDunggeunmo";
+    border: 1px solid #EDEDF0;
+}
+
+.date-today{
+    flex: 0;
+    align-items: center;
+    text-align: center;
+    padding: 0.5rem 0.8rem;
+    margin-right: 0.8rem;
+    color: #3b87ab;
+}
+
+.date-list{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: start;
+}
+
+.date{
+    margin-right: 10px;
+}
+
+.date-red{
+    color: red;
+}
+
+.date-blue{
+    color: blue;
+}
+
+.diary-scrollbox{
+    position: absolute;
+    top: 100px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    overflow: auto;
+}
+
+.diary{
+    border: 1px solid #EDEDF0;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+
+
+.diary-date{
+    flex: 0;
+    font-family: "NeoDunggeunmo";
+    color: #3b87ab;
+    padding: 1rem;
+}
+
+.create_new_diary{
+    flex: 0;
+    padding: 1rem;
+    margin-bottom: 3px;
+    font-family: 'NeoDunggeunmo';
+    background-color: white;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.create_new_diary:hover {
+    background-color: black;
+    color: white;
+}
+
+.create_new_diary a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.diary-contents{
+    flex: 1;
+    font-size:20px;
+    font-family: "KyoboHand";
+    text-align: center;
+}
+
+#title {
+    font-size: 20px;
+    font-family: "NeoDunggeunmo";
+    font-weight: bold;
+}
+#content {
+    font-size: 15px;
+    font-family: "NeoDunggeunmo";
+}
+
+#cTime {
+    font-family: "NeoDunggeunmo";
+    font-size: 5px;
+}
+#uTime {
+    font-family: "NeoDunggeunmo";
+    font-size: 5px;
+}
+
+#WriteTime {
+    font-size: 20px;
+    font-family: "NeoDunggeunmo";
+}
+#WriteContent {
+    font-size: 15px;
+    font-family: "NeoDunggeunmo";
+}
+
+#DUbutton {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#updatecheck, #deletecheck {
+    font-family: 'NeoDunggeunmo';
+    background-color: white;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-right: 20px;
+}
+
+#updatecheck:hover, #deletecheck:hover {
+    background-color: black;
+    color: white;
+}
+
+
+/*.daydiary{*/
+/*    position: absolute;*/
+/*    top: 100px;*/
+/*    left: 15px;*/
+/*    right: 15px;*/
+/*    bottom: 15px;*/
+/*    overflow: auto;*/
+/*}*/
+
+.fa-lock{
+    font-size: 0.5rem;
+    color: white;
+    margin-right: 0.5rem;
+}
+
+.button-box{
+    display: flex;
+    justify-content: center;
+}
+
+.diary-button{
+    display: block;
+    border: none;
+    padding: 1rem;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 1rem;
+    font-family: "NeoDunggeunmo";
+    color: white;
+    background-color: white;
+    cursor: pointer;
+
+}
+
+.diary-button:hover{
+    background: #1aab8a;
+    color: #fff;
+    transition: 2s ease all;
+}
+
+#secret-box{
+    display: none;
+}

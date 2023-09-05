@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINI HOME PAGE > Picture</title>
+    <link rel="stylesheet" href="/CSS/layout.css">
+    <link rel="stylesheet" href="/CSS/font.css">
+    <link rel="stylesheet" href="/CSS/picture.css">
+    <script src="https://kit.fontawesome.com/4d7bebdd92.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <style>
+        /* 좋아요 버튼의 색상을 변경하는 CSS 클래스 "liked" 정의 */
+        .liked {
+            background-color: red; /* 좋아요가 활성화된 상태일 때 배경색을 빨간색으로 변경 */
+            color: white; /* 글자색을 흰색으로 변경 */
+        }
+
+        .pagination {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination-item {
+            color: black;
+        }
+
+        .liked_cls {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            outline:none;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="bookcover">
+        <div class="bookdot">
+            <div class="page">
+                <div class="profile-container">
+                    <div class="header profile-title font-neo">
+                        TODAY <span style="color:red" th:text="${todayVisitCount}"></span>
+                        |  TOTAL <span th:text="${totalVisitCount}"></span></div>
+
+                    <div class="box profile-box">
+                        <div class="profile-image">
+                            <img class="profile-image-img"  th:src="@{'/uploads/' + ${profileImg}}" alt="프로필이미지">
+
+                        </div>
+                        <div class="profile-text font-kyobohand">
+                            <p id="content" th:text="${loginUser.userPost.content}"></p>
+                        </div>
+                        <div class="profile-username font-kyobohand">
+                            <span style="color: #0f1b5c" th:text="${loginUser.userNickName}"></span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <div class="dropdown-content">
+                                <select onchange="showUserData(this.value)" target="_blank">
+                                    <!-- 사용자를 선택하면 showUserData 함수를 호출 -->
+                                    <option value="">파도타기</option> <!-- 기본 선택 항목 -->
+                                    <option th:each="user : ${users}" th:value="${user.id}"
+                                            th:text="${user.getUserName}"></option>
+                                    <!-- 사용자 목록을 반복하여 각 사용자를 선택 항목으로 표시 -->
+                                </select>
+                                <script> <!-- 자바스크립트 코드 -->
+                                function showUserData(userId) { // 사용자의 id를 받아 해당 사용자의 게시글을 보여주는 함수
+                                    window.location.href = '/MiniMain-view?userId=' + userId;
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-container">
+                    <div class="header content-title">
+                        <div class="content-title-name" id="miniTitle" th:text="${loginUser.userPost.pageTitle}"
+                             th:utext="${loginUser.userPost.pageTitle}" aria-readonly="true"></div>
+                        <div class="content-title-url"
+                             th:text=" 'https://'+ ${loginUser.userNickName} + '.helloWorld.com/'"></div>
+                    </div>
+
+                    <!---------------------사진첩 구현-------------------------------->
+
+                    <div class="box content-box">
+                        <div class="content-photo">
+                            <!-- 사진 업로드하는 곳으로 가는 버튼 -->
+                            <!-- 사진 업로드하는 곳으로 가는 버튼 -->
+                            <div th:if="${showUploadButton}">
+                                <button class="upload-btn">
+                                    <a th:href="@{/Upload-photo(userId=${loginUser.getId()})}">
+                                        사진첩 업로드
+                                    </a>
+                                </button>
+                            </div>
+
+                            <!-- 업로드된 사진이 없는 경우 이미지 표시 -->
+                            <div th:if="${showNoPhotoImage}">
+                                <img class="no-photo-image" src="/images/nogallerypic.png" alt="업로드된 사진이 없음">
+                            </div>
+
+
+
+
+
+
+
+                            <ul>
+                                <li th:each="photo : ${photoList}">
+                                    <div class="photo-title font-neo">
+                                        <span th:text="${#temporals.format(photo.getCreatedDate(), 'yyyy-MM-dd')} + ' | ' + ${photo.title}"></span>
+                                        <div class="delete-button"
+                                             th:if="${loginUser != null && loginUser.id == photo.uploader.id}">
+                                            <form th:action="@{/delete-photo}" method="post" id="deleteForm">
+                                                <input type="hidden" name="photoId" th:value="${photo.id}"/>
+                                                <button type="button" onclick="confirmDelete()"
+                                                        th:if="${isUploader}" style="border: none; background-color: transparent; padding: 0;">
+                                                삭제
+                                                </button>
+
+                                            </form>
+                                        </div>
+                                        <div id="likesDiv">
+                                            <button th:id="'btnLikesCheck' + ${photo.id}" th:value="${photo.like}" class="liked_cls" th:data-ptid="${photo.id}"
+                                                    th:style="${photo.like == true ? 'color:red;' : 'color:gray'}">
+                                                <i class="fa-solid fa-heart" ></i> <!--조건줘서 인풋히든으로 벨류값 넘겨서 th style 삼항연산자-->
+                                            </button>
+                                        </div>
+                                        <div class="likesCnt" th:id="'likesCnt-' + ${photo.id}" th:text="${photo.likes}"></div>
+                                    </div>
+                                    <div class="photo-image">
+                                        <img th:src="@{'/uploads/' + ${photo.imageUrl}}" alt="사진"/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 페이징 처리 -->
+                        <nav class="pagination-nav">
+                            <ul class="pagination">
+                                <li class="pagination-item" th:if="${photoPage.hasPrevious()}">
+                                    <a class="pagination-link" th:href="@{/MiniPicture-view(userId=${loginUser.id}, page=${photoPage.number - 1})}">이전</a>
+                                </li>
+                                <li class="pagination-item">
+                                    <span class="pagination-link" th:text="${photoPage.number + 1} + '/' + ${photoPage.totalPages}"></span>
+                                </li>
+                                <li class="pagination-item" th:if="${photoPage.hasNext()}">
+                                    <a class="pagination-link" th:href="@{/MiniPicture-view(userId=${loginUser.id}, page=${photoPage.number + 1})}">다음</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                    </div>
+                </div>
+                <div class="menu-container">
+                    <div class="menu-button">
+                        <a th:href="@{/gotohomebutdontrefreshmusiclist(userId=${loginUser.getId()})}">
+                            <button>홈</button>
+                        </a>
+                        <a th:href="@{/MiniDiary-view(userId=${loginUser.getId})}">
+                            <button>다이어리</button>
+                        </a>
+                        <a th:href="@{/MiniPicture-view(userId=${loginUser.getId})}">
+                            <button>사진첩</button>
+                        </a>
+                        <a th:href="@{/MiniGuest-view(userId=${loginUser.getId})}">
+                            <button>방명록</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="small-box-container">
+        <div class="Music-box"></div>
+    </div>
+</div>
+
+<script>
+    function goToUploadPage() {
+        window.location.href = "/UploadPhoto.html";
+    }
+
+    function confirmDelete() {
+        if (confirm("정말 삭제하시겠습니까?")) {
+            document.getElementById("deleteForm").submit();
+        }
+    }
+
+    $(function() {
+
+        let checkLikes = false;
+        let ptid;
+
+        $(".liked_cls").click(function() {
+            ptid = $(this).data("ptid"); // Get the photoId from the data attribute
+
+            $.ajax({
+                url: '/likes',
+                type: 'post',
+                data: { photoId: ptid }, // Pass the photoId in the request body
+                success: function(obj) {
+                    if ($("#btnLikesCheck" + ptid).val() === "false") {
+                        $("#btnLikesCheck" + ptid).val("true");
+                        checkLikes = true;
+                        alert("졓아! :)");
+                        countLikes(ptid);
+                        if(checkLikes) {
+                            $("#btnLikesCheck" + ptid).css("color", "red");
+                        }
+                    } else if ($("#btnLikesCheck" + ptid).val() === "true") {
+                        $("#btnLikesCheck" + ptid).val("false");
+                        checkLikes = false;
+                        alert("응 아니야~ :p");
+                        countLikes(ptid);
+                        if(!checkLikes) {
+                            $("#btnLikesCheck" + ptid).css("color", "gray");
+                        }
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+    function countLikes(id) {
+
+        $.ajax({
+            url: "/cnt-likes",
+            type: "post",
+            data: {id : id},
+            success: function (obj) {
+                console.log(obj);
+                let cntLikesDiv = $("#likesCnt-" + id);
+                cntLikesDiv.empty();
+                let cntLikes = obj;
+                cntLikesDiv.append(cntLikes);
+
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    };
+
+
+    // 사진 주인만 삭제, 업로드 버튼 활성화
+    let loginUser = /*[[${loginUser}]]*/ null;
+    let photoList = /*[[${photoList}]]*/ [];
+
+    // 페이지 로드 시 실행되는 함수
+    function updateButtons() {
+        let uploadBtn = document.getElementById('uploadBtn');
+        let deleteBtn = document.getElementById('deleteBtn');
+
+        if (loginUser != null) {
+            for (let i = 0; i < photoList.length; i++) {
+                let photo = photoList[i];
+
+                if (loginUser.id === photo.uploader.id) {
+                    uploadBtn.style.display = 'block';
+                    deleteBtn.style.display = 'block';
+                    return; // 버튼을 표시하고 함수 종료
+                }
+            }
+        }
+
+        // 로그인한 사용자와 일치하는 업로더가 없는 경우 버튼을 숨김
+        uploadBtn.style.display = 'none';
+        deleteBtn.style.display = 'none';
+    }
+
+    // 페이지 로드 완료 시 updateButtons 함수 호출
+    window.onload = updateButtons;
+
+</script>
+
+
+</body>
+</html>

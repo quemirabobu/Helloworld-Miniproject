@@ -1,0 +1,1 @@
+package com.example.miniprogect1.DTO;import lombok.AllArgsConstructor;import lombok.Builder;import lombok.Data;import lombok.NoArgsConstructor;@Data@NoArgsConstructor@AllArgsConstructor@Builderpublic class IlchonDTO {    private Long uId;    private String me;    private String you;    private String friend;}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+    <style>
+
+    </style>
+    <script>
+
+        $(document).on("click", ".musicname", function () {
+
+
+
+            var pid = $(this).attr('id');  // 클릭된 요소의 id 값을 가져옵니다.
+            console.log(pid);
+            var elements = document.getElementsByClassName('musicname');
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.color = 'initial';
+            }
+            // $(".here").each(function() {
+            let currentHereElement = $(this);
+            let zzz = currentHereElement.attr("id");
+            let z = zzz.replace("herename", "");
+            $(".player").each(function() {
+                // 'musicname' prefix와 id를 결합하여 전체 id를 얻습니다.
+                let musicnameId = 'musicname' + z;
+                $("#" + pid).css("color", "red");
+            });
+            // });
+            $.ajax({
+                url: "/musicapplyforplay",
+                type: "post",
+                data: {productId: pid, uid: $("#idinput").val()},
+                success: (obj) => {
+
+
+
+//x눌러서 없어진 아이템들은 미니룸 화면 위에 없어져야 하니까 리다이렉트를 함
+                    console.log(obj);
+                    console.log(obj.item.productEntity.productName);
+                    console.log(obj.item.productEntity.productFileName);
+                    // console.log('이게 아이템'+obj.item.productId);
+                    // $("div[style='margin-left: 10px;margin-top: 10px']").text(obj.item.productEntity.productName);
+                    // Update the source of the audio
+                    $(".haha source").attr("src", obj.item.productEntity.productFileName);
+                    console.log(    '하하소스의 프로덕트파일네임'+ $(".haha source").attr("src")          );
+                    console.log(obj.item.productEntity);
+                    $(".haha source").attr("id", 'haha'+ obj.item.productEntity.pid);
+                    console.log(  '이게 소스의 피아이디'+   obj.item.productEntity.pid);
+                    $(".haha")[0].load();
+                    // $(".here").each(function() {
+                    let currentHereElement = $(this);
+                    let zzz = currentHereElement.attr("id");
+                    let z = zzz.replace("herename", "");
+
+                    // $(".player").each(function() {
+                    //     if (z == $(this).attr("id")) {
+                    //         // 'musicname' prefix와 id를 결합하여 전체 id를 얻습니다.
+                    //         let musicnameId = 'musicname' + z;
+                    //         $("#" + musicnameId).css("color", "red");
+                    //     }
+                    // });
+                    // });
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+
+
+
+
+        });
+    </script>
+</head>
+<body>
+
+
+
+
+
+
+<div style="position: relative; display: inline-block; background-color: black">
+
+    <img style="width: 300px; height:600px " src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Ftt1Eq%2FbtsnalUNx2y%2FV9PzUq72BUjpKQLWZeUUjk%2Fimg.png" alt="">
+
+
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <p style="font-size: 30px; font-weight: bold; color: yellow; margin-bottom: 20px" >My MusicList</p>
+        <p style="font-size: 17px; color: red;">음악은... 마약이다</p>
+        <audio controls class="haha" autoplay style="width: 80%; height: 20px; margin-top: 8px; margin-bottom: 6px">
+            <source th:if="${representativemusic != null}" class="player" th:id="${'haha' + representativemusic.productEntity.pId}" th:src="@{${representativemusic.productEntity.productFileName}}" type='audio/mp3'/>
+            <source th:unless="${representativemusic != null}" class="player" src="" type='audio/mp3'/>
+        </audio>
+        <div style="display: flex; font-size: 15px; color: #c71a01; align-content: center; justify-content: center; align-items: center">
+            대표음악&nbsp;&nbsp;&nbsp;
+            <div class="musicname" style="font-size: 15px;  color: white" th:if="${representativemusic != null}" th:text="${representativemusic.productEntity.productName}" th:id="${representativemusic.productEntity.pId}">대표음악 - aliciakeys</div>
+            <div class="musicname" style="font-size: 15px; color: white" th:unless="${representativemusic != null}" th:text="'대표음악이 없어요'"></div>
+        </div>
+        <p class="musicname" th:each="havingmusic : ${belongingsList}" style="font-size: 15px; color: white;  margin-top: 6px" th:text="${havingmusic.productEntity.productName}" th:id="${havingmusic.productEntity.pId}">Aliciakeys-no one <input type="hidden" id="idinput" th:value="${representativemusic.User.id}"></p>
+    </div>
+    <audio th:each="havingmusic : ${belongingsList}" controls class="hihi" style="width: 100%; height: 20px; margin-top: 6px; display: none">
+        <source class="player" th:id="${'player'+ havingmusic.productEntity.pId}" th:src="@{${havingmusic.productEntity.productFileName}}" type='audio/mp3'/>
+    </audio>
+</div>
+
+
+
+
+
+
+
+</body>
+
+<script>
+
+</script>
+</html>

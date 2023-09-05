@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+
+        a {
+            color: inherit; /* 현재 요소의 상속된 색상 사용 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+
+        body {
+
+            font-family: 'Stylish', sans-serif;
+
+        }
+
+        table, th, td {
+
+            border: solid #f3cda9 1px;
+
+            /*border-collapse: collapse;*/
+
+            text-align: center;
+
+
+        }
+
+
+        table {
+
+
+            width: 300px;
+
+            height: 250px;
+
+        }
+
+
+        th {
+
+            background-color: rgba(252, 199, 137, 0.5);
+
+        }
+
+
+        #left table {
+
+            width: 400px;
+
+            height: 420px;
+
+        }
+
+        #moveUserBtn {
+            display: inline-block;
+            padding: 5px 5px;
+            font-size: 14px;
+            border: none;
+            background-color: #ffcc00;
+            color: #fff;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        #moveUserBtn:hover {
+            background-color: #ff9900;
+        }
+
+
+
+    </style>
+
+</head>
+<body><table id="ul-right" style="width: 400px; height:400px; text-align: center; margin-top: 20px;">
+    <thead>
+    <tr>
+        <th >이름</th>
+        <th>닉네임</th>
+        <th>URL</th>
+        <th>바로가기</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${userPage.content}">
+        <td th:text="${user.userName}" ></td>
+        <td th:text="${user.userNickName}"></td>
+        <td class="content-title-url"
+            th:text="'https://' + ${user.userNickName} + '.helloWorld.com/'"></td>
+        <td>
+            <a th:href="@{/MiniMain-view(userId=${user.id})}" target="_blank">
+                <button id="moveUserBtn">GO!</button>
+            </a>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+</body>
+</html>

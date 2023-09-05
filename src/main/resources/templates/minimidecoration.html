@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&family=Libre+Baskerville&family=Single+Day&family=Stylish&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        #logout {
+            cursor: pointer;
+            background-color: #ffcc00;
+            height: 20px;
+            width: 90px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            position: absolute;
+            right: 0;
+            font-size: 11px;
+            color: #333;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+
+        #logout:hover {
+            background-color: #ff9900;
+            color: #fff;
+        }
+
+        #banner {
+            width: 100%;
+            height: 55px;
+            background-color: orange;
+            display: flex;
+            align-items: center;
+        }
+
+        .bannerbutton {
+            width: 12%;
+            background-color: #eaa013;
+            height: 100%;
+            align-items: center;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            border: solid white 3px;
+            margin-right: 5px;
+            font-size: 19px;
+            color: #ffffff;
+            text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        }
+
+        #content {
+            display: flex;
+            justify-content: center;
+        }
+
+        #chargebox {
+            width: 900px;
+            height: 600px;
+            background-color: #ffffff;
+            border: solid orange 3px;
+            display: flex;
+
+        }
+
+        .leftbanner {
+            width: 100px;
+            height: 40px;
+            background-color: #ffb571;
+            color: white;
+            border-radius: 2px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 4px;
+            border: solid #ff8d1c 1px;
+        }
+
+        #chargebox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+
+        #back {
+            position: relative;
+            height: 1000px;
+            background-image: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fs4RlP%2FbtskQjr1WRj%2FVGu2w6gF1Pm7qMg7SCUZt1%2Fimg.png');
+            background-color: rgba(255, 255, 255, 0.1); /* adjust opacity here */
+        }
+
+
+
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            var po = $(".minimibox").attr('id');
+
+console.log(po);
+            var pid = po.replace("imagebox", "");  // "imagebox"를 제거합니다.
+            console.log(pid);
+
+            // 클릭된 버튼의 id 값을 가져옵니다.
+            $(`#${pid}`).attr("disabled", true);
+
+
+        });
+
+
+
+
+
+
+$(function (){
+    $(document).on("click", ".apply", function () {
+        //적용하기 버튼을 눌렀을때 나타나는일
+        var productId = $(this).attr('id');  // 클릭된 버튼의 id 값을 가져옵니다.
+
+        // 이 버튼에 대한 참조를 저장합니다.
+        var $button = $(this);
+
+        var productId = $(this).attr('id');  // 클릭된 버튼의 id 값을 가져옵니다.
+        var p = $(".minimibox").attr('id');  // 클릭된 버튼의 id 값을 가져옵니다.
+
+
+        console.log(p);
+        if (p!==undefined) {
+
+        var pid = p.replace("imagebox", "");  // "imagebox"를 제거합니다.
+        console.log(pid);
+        console.log(pid);
+
+        $.ajax({
+            url: "/productdb-deapply",
+            type: "post",
+            data: {productId: pid},
+            success: (obj) => {
+//x눌러서 없어진 아이템들은 미니룸 화면 위에 없어져야 하니까 리다이렉트를 함
+                console.log(obj);
+                window.location.href = "/minimi-decoration"; // 페이지 리다이렉트
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        });
+
+
+        $.ajax({
+            url: "/product-apply",
+            type: "post",
+            data: {productId: productId, id: $("#idinput").val()},
+            success: (obj) => {
+                console.log(obj);
+
+                window.location.href = "/minimi-decoration"; // 페이지 리다이렉트
+
+//적용하기를 누르면 미니룸 화면 위로 아이템들이 좌표값으로 배치되야됨.
+
+                // var img = document.createElement('img');
+                // img.id = 'dynamic-img-' + obj.item.productId;  // 고유한 id를 추가합니다.
+                // img.style.width = '60px';
+                // img.style.height = '60px';
+                // img.src = obj.item.productPath;
+                // img.style.position = 'absolute';  // div를 기준으로 배치
+                // img.style.left = obj.item.coordinateX + 'px';  // 좌표를 픽셀 단위로 설정
+                // img.style.top = obj.item.coordinateY + 'px';  // 좌표를 픽셀 단위로 설정
+                //
+                // document.getElementById('container').appendChild(img);  // 이미지를 div에 추가
+
+                // 클릭된 버튼만 비활성화합니다.
+                $button.attr("disabled", true);
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        });
+
+
+        $.ajax({
+            url: "/productdb-apply",
+            type: "post",
+            data: {productId: productId},
+            success: (obj) => {
+
+                console.log(obj);
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        });
+
+
+    } else{
+            $.ajax({
+                url: "/product-apply",
+                type: "post",
+                data: {productId: productId, id: $("#idinput").val()},
+                success: (obj) => {
+                    console.log(obj);
+
+                    window.location.href = "/minimi-decoration"; // 페이지 리다이렉트
+
+//적용하기를 누르면 미니룸 화면 위로 아이템들이 좌표값으로 배치되야됨.
+
+                    // var img = document.createElement('img');
+                    // img.id = 'dynamic-img-' + obj.item.productId;  // 고유한 id를 추가합니다.
+                    // img.style.width = '60px';
+                    // img.style.height = '60px';
+                    // img.src = obj.item.productPath;
+                    // img.style.position = 'absolute';  // div를 기준으로 배치
+                    // img.style.left = obj.item.coordinateX + 'px';  // 좌표를 픽셀 단위로 설정
+                    // img.style.top = obj.item.coordinateY + 'px';  // 좌표를 픽셀 단위로 설정
+                    //
+                    // document.getElementById('container').appendChild(img);  // 이미지를 div에 추가
+
+                    // 클릭된 버튼만 비활성화합니다.
+                    $button.attr("disabled", true);
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+
+
+            $.ajax({
+                url: "/productdb-apply",
+                type: "post",
+                data: {productId: productId},
+                success: (obj) => {
+
+                    console.log(obj);
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        }
+
+
+
+    });
+
+
+
+
+})
+
+        function confirmLogout() {
+            if (confirm("정말 로그아웃 하시겠습니까?")) {
+                // "Yes"를 선택한 경우 로그아웃을 수행하는 URL로 리다이렉트
+                window.location.href = "/logout";
+            } else {
+                // "No"를 선택한 경우 아무 동작도 수행하지 않음
+            }
+        }
+    </script>
+</head>
+<body>
+
+
+
+<div id="banner">
+    <div id="mingyupush" style="width: 24%"></div>
+    <div  onclick="window.location.href='/home'" style="height: 100%">
+    <img  id="logo" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcdF9J4%2FbtskRufcTKP%2FmAHqe1WxB0eyLRqjxKR5kK%2Fimg.png"
+          style="height: 100%" alt="">
+    </div>
+    <div class="bannerbutton " id="myroom" style="background-color: rgba(255,209,190,0.81)" onclick="window.location.href='/myPage'">마이룸</div>
+    <div class="bannerbutton" id="purchase" onclick="window.location.href='/miniroom'">구매</div>
+    <div class="bannerbutton" id="charge" onclick="window.location.href='/cash'" >충전</div>
+    <div class="logoutbox" style="position: absolute; top: 10px;right: 11px ">
+        <p style="margin-bottom: 3px;margin-top: 4px;font-size: 13px;
+            color: #5e5c5c;" th:text="${session.loginUser.userName} + '님 환영합니다'"></p>
+        <button id="logout" onclick="confirmLogout()">
+            로그아웃
+        </button>
+
+    </div>
+</div>
+<p style="font-size: 4px"></p>
+<div style="background-color: #ea8a8a;height: 4px; margin-top: 4px"></div>
+<!--<p style="font-size: 40px"></p>-->
+
+
+<!--여기부터 시작-->
+
+<div style=" height: 800px" id="back">
+    <!--    한줄 띄고-->
+    <div style="height: 50px"></div>
+
+
+
+
+
+
+    <div id="content">
+        <div>
+            <div class="leftbanner" id="smalluseriinfo" style="background-color: white;color: #c71a01; font-weight: bold" onclick="window.location.href='/myPage'">회원정보</div>
+            <div class="leftbanner" id="smallmyroom" style="font-weight: bold" onclick="window.location.href='/haha'">마이룸</div>
+            <div class="leftbanner"  onclick="window.location.href='/myroombgm'"  id="smallbgm" style="background-color: white;color: #c71a01;font-weight: bold">BGM</div>
+        </div>
+        <div id="chargebox" style="flex-direction: column">
+
+            <div style="display: flex">
+
+
+                <!--                아래는 왼쪽에 내방꾸미기 미니미꾸미기 버튼있는곳-->
+                <div style="width: 300px;height: 300px;background-color: #ffffff; display: flex;flex-direction: column;justify-content: center;align-items: center">
+                    <p></p>
+                    <button  onclick="window.location.href='/deco-wallpaper'" style="width: 190px;height: 40px; margin-top: 20px;margin-bottom: 20px">벽지도배</button>
+                    <button onclick="window.location.href='/haha'" style="width: 190px;height: 40px;">
+                        내방 꾸미기
+                    </button>
+                    <button  onclick="window.location.href='/minimi-decoration'"  style="width: 190px;height: 40px;background-color: #ffb571; margin-top: 20px;margin-bottom: 20px;border: solid orange 1px; border-radius: 5px;
+">미니미 꾸미기
+                    </button>
+                    <p style="color: #ea6e23;font-size: 27px">여러분의 미니미를 꾸며보세요</p>
+
+                </div>
+
+                <!--                아래코드는 오른쪽 미니미랑 일촌들의 미니미 top3-->
+                <div style="width: 500px;height: 300px;background-color: #ffffff;margin-left: 10px; display: flex;align-items: center;justify-content: center">
+                    <div th:each="minimi : ${appliedbelongingsList}" style="border: solid #ea6e23 1px;padding: 3px"><!--           내 미니미를 품은 div             -->
+                        <input type="hidden" th:value="${minimi.productEntity.pId}" />
+                        <input type="hidden" th:value="${minimi.User.id}" />
+
+                        <img class="minimibox" th:id="imagebox+${minimi.productEntity.pId}"
+                                style="width: auto; height: 200px"
+                                th:src="@{${minimi.productEntity.productFileName}}"
+                                alt="">
+                    </div>
+                    <div style="width: 380px; height: 200px; background-color: #ffffff;display: flex;flex-direction: column;justify-content: center;align-items: center;border: solid #f5b998 2px;margin-left: 20px">
+                        <p>일촌들의 미니미 Top3</p>
+
+                        <!--                        일촌들의 미니미 top3 품은 div-->
+                        <div id="ilchonminimitop3" style="display: flex;justify-content: space-between; width: 300px">
+
+
+                            <!--                            top1-->
+
+                            <div   th:each="top3 : ${top3productentity}"  id="top1" style="display: flex;flex-direction: column; justify-content: center; align-items: center">
+                                <!--                                <img style="height: 114px"-->
+                                <!--                                     th:src="@{${top3.productFileName}}"-->
+                                <!--                                     alt="">-->
+                                <!--                                <div  th:text="${top3.productName}"  style="width: 48px;font-size: 10px;text-align: center; margin-top: 10px">양아치군인</div>-->
+                                <img style="height: 114px"
+                                     th:src="${top3 != null && top3.productFileName != null ? top3.productFileName : ''}"
+                                     alt="">
+                                <div th:text="${top3 != null && top3.productName != null ? top3.productName : ''}"  style="width: 48px;font-size: 10px;text-align: center; margin-top: 10px"></div>
+
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!--            여기는 아이템 있는곳-->
+            <div id="itembox"
+                 style="width: 840px;height: 250px;background-color: #ffffff;margin-top: 10px;display: flex;  flex-wrap: wrap;">
+
+
+                <!--                아래코드 이거 하나가 아이템 하나를 의미한다.-->
+                <div  th:each="minimiitem : ${belongingsList}"    class="minimideploy" style="width: 100px;height: 100px;background-color: #ffffff;border: solid white 2px;display: flex;flex-direction: column;justify-content: center;align-items: center">
+                    <img style="width: 20px;height: 52px"
+                         th:src="@{${minimiitem.productEntity.productFileName}}"
+                         alt="">
+                    <div style="font-size: 8px" th:text="${minimiitem.productEntity.productName}"></div>
+                    <button class="apply"  th:id="${minimiitem.productEntity.pId}" style="width: 80px;height: 15px;font-size: 8px">적용하기</button>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+
+
+</body>
+
+</html>
+
+<!--<img th:src="@{/images/woodchair.png}" alt="">-->

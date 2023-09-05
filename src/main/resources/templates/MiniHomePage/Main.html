@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINI HOME PAGE</title>
+    <link rel="stylesheet" href="/CSS/layout.css">
+    <link rel="stylesheet" href="/CSS/font.css">
+    <link rel="stylesheet" href="/CSS/MiniHome.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <script>
+
+        window.onload = function() {
+            let musicListUrl = document.getElementById('musicListUrl').value;
+
+            console.log('이거 뮤직유알엘'+   musicListUrl);
+if(musicListUrl!=""){
+    let musicWindow = window.open(musicListUrl, "Music List", "width=302,height=605");
+
+}
+            console.log(musicListUrl);
+        };
+
+
+
+
+
+
+        $(document).on("click", ".musicname", function () {
+
+
+            var pid = $(this).attr('id');  // 클릭된 요소의 id 값을 가져옵니다.
+            console.log(pid);
+            var elements = document.getElementsByClassName('musicname');
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.color = 'initial';
+            }
+            // $(".here").each(function() {
+            let currentHereElement = $(this);
+            let zzz = currentHereElement.attr("id");
+            let z = zzz.replace("herename", "");
+            $(".player").each(function () {
+                // 'musicname' prefix와 id를 결합하여 전체 id를 얻습니다.
+                let musicnameId = 'musicname' + z;
+                $("#" + pid).css("color", "red");
+            });
+            // });
+            $.ajax({
+                url: "/musicapplyforplay",
+                type: "post",
+                data: {productId: pid, uid: $("#idinput").val()},
+                success: (obj) => {
+
+
+//x눌러서 없어진 아이템들은 미니룸 화면 위에 없어져야 하니까 리다이렉트를 함
+                    console.log(obj);
+                    console.log(obj.item.productEntity.productName);
+                    console.log(obj.item.productEntity.productFileName);
+                    // console.log('이게 아이템'+obj.item.productId);
+                    // $("div[style='margin-left: 10px;margin-top: 10px']").text(obj.item.productEntity.productName);
+                    // Update the source of the audio
+                    $(".haha source").attr("src", obj.item.productEntity.productFileName);
+                    console.log('하하소스의 프로덕트파일네임' + $(".haha source").attr("src"));
+                    console.log(obj.item.productEntity);
+                    $(".haha source").attr("id", 'haha' + obj.item.productEntity.pid);
+                    console.log('이게 소스의 피아이디' + obj.item.productEntity.pid);
+                    $(".haha")[0].load();
+                    // $(".here").each(function() {
+                    let currentHereElement = $(this);
+                    let zzz = currentHereElement.attr("id");
+                    let z = zzz.replace("herename", "");
+
+                    // $(".player").each(function() {
+                    //     if (z == $(this).attr("id")) {
+                    //         // 'musicname' prefix와 id를 결합하여 전체 id를 얻습니다.
+                    //         let musicnameId = 'musicname' + z;
+                    //         $("#" + musicnameId).css("color", "red");
+                    //     }
+                    // });
+                    // });
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+
+
+        });
+
+
+        let belongingsList;
+
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            console.log('시발 왜안되');
+
+            ///여기는 모든창이 로드 되자마자 내가 가지고있는 것들이 미니룸 사진 위에 뜨게한거.
+            belongingsList = JSON.parse(document.getElementById('belongingsData').textContent);
+
+            console.log(JSON.parse(document.getElementById('belongingsData').textContent));
+//belonglist 텍스트를 json으로 바꿔서 객체 하나하나당 생성 가능.
+            belongingsList.forEach((obj) => {
+
+                let img = document.createElement('img');
+                console.log(obj.productEntity.pid + '하하하하하');
+                console.log(obj.productEntity);
+                console.log(obj.productEntity.productFileName);
+                img.id = 'dynamic-img-' + obj.productEntity.pid;  // 고유한 id를 추가합니다.
+                if (obj.productEntity.productCategory == '가구') {
+                    img.style.width = '60px';
+                } else if (obj.productEntity.productCategory == '미니미') {
+                    //카테고리가 미니미면  크게를 홀쪽하게. 가구면 정사각형으로
+                    img.style.width = 'auto';
+                }
+                img.style.height = '60px';
+                img.src = obj.productEntity.productFileName;
+                img.style.position = 'absolute';  // div를 기준으로 배치
+                img.style.left = obj.productEntity.coordinateX + 'px';  // 좌표를 픽셀 단위로 설정
+                img.style.top = obj.productEntity.coordinateY + 'px';  // 좌표를 픽셀 단위로 설정
+                document.getElementById('container').appendChild(img);  // 이미지를 div에 추가
+                console.log(obj.productEntity.pid);
+
+//이미 화면에 적용된 아이템은 적용하기 버튼이 비활성화되게.
+                $("#" + obj.productEntity.pid).attr("disabled", true);
+
+            });
+        });
+
+
+    </script>
+
+</head>
+<body>
+<input type="hidden" id="musicListUrl" th:value="${musicListUrl}" />
+
+
+<div class="wrapper">
+    <div class="bookcover">
+        <div class="bookdot">
+            <div class="page">
+                <div class="profile-container">
+                    <div class="header profile-title font-neo">
+                        TODAY <span style="color:red" th:text="${todayVisitCount}"></span>
+                        | TOTAL <span th:text="${totalVisitCount}"></span></div>
+                    <div class="box profile-box">
+                        <div class="profile-image">
+                            <img class="profile-image-img" th:src="@{'/uploads/' + ${profileImg}}" alt="프로필이미지">
+                        </div>
+                        <div class="profile-text font-kyobohand">
+                            <p id="content" contenteditable="true"
+                               th:text="${loginUser.userPost.content}"
+                               th:utext="${loginUser.userPost.content}"
+                            >
+                                <img id="editBtnn" src="/images/pencil.png" class="editButton" alt="수정버튼" onclick="editBtn()">
+
+                        </div>
+                        <div class="profile-username font-kyobohand">
+                            <span style="color: #0f1b5c" th:text="${loginUser.userNickName}"></span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <div class="dropdown-content">
+                                <select onchange="redirectHome(this.value)" target="_blank">
+                                    <option value="">파도타기</option>
+                                    <option th:each="user : ${users}" th:value="${user.id}"
+                                            th:text="${user.userName}"></option>
+                                </select>
+                                <script>
+                                    function redirectHome(userId) {
+                                        // window.location.href = '/MiniMain-view?userId=' + userId;
+
+                                        // 김은석이 바꾼거ee
+                                        window.location.href = '/letsgotohompie/' + userId;
+                                    }
+                                </script>
+                            </div>
+                        </div>
+
+
+                        <!--여기김은석-->
+                        <!--여기김은석-->
+                        <!--여기김은석-->
+                        <!--여기김은석-->
+                        <!--                        <div style="height: 160px; width: 100%; border: solid #b0e1ea 1px; background-color: #dcd9d9; text-align: center; margin-top: 5px">-->
+                        <!--                            <p style="font-size: 7px; line-height: 2px; color: red; ">음악은... 마약이다</p>-->
+                        <!--                            <audio controls class="haha" autoplay-->
+                        <!--                                   style="width: 100%; height: 20px; margin-top: 6px;">-->
+
+                        <!--                        &lt;!&ndash;                                &lt;!&ndash;                                <source      class="player" th:id="${'haha'+ representativemusic.productEntity.pId}" th:src="@{${representativemusic.productEntity.productFileName}}" type='audio/mp3'/>&ndash;&gt;&ndash;&gt;-->
+
+                        <!--                                &lt;!&ndash;                                <source      class="player" th:id="${'haha'+ representativemusic.productEntity.pId}" th:src="@{${representativemusic.productEntity.productFileName}}" type='audio/mp3'/>&ndash;&gt;-->
+
+                        <!--                                <source th:if="${representativemusic != null}" class="player"-->
+                        <!--                                        th:id="${'haha' + representativemusic.productEntity.pId}"-->
+                        <!--                                        th:src="@{${representativemusic.productEntity.productFileName}}"-->
+                        <!--                                        type='audio/mp3'/>-->
+                        <!--                                <source th:unless="${representativemusic != null}" class="player" src=""-->
+                        <!--                                        type='audio/mp3'/>-->
+
+                        <!--                            </audio>-->
+                        <!--                            &lt;!&ndash;              이거가 대표음악&ndash;&gt;-->
+
+                        <!--                            <div style="display: flex; font-size: 7px; color: #c71a01; align-content: center; justify-content: center; align-items: center">-->
+                        <!--                                대표음악&nbsp;&nbsp;&nbsp;-->
+                        <!--                                &lt;!&ndash;                            <div  class="musicname"   style="font-size: 7px; color: black"&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;                               th:text="${representativemusic.productEntity.productName}" th:id="${representativemusic.productEntity.pId}">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;                        </div>&ndash;&gt;-->
+
+                        <!--                                <div class="musicname" style="font-size: 7px; color: black"-->
+                        <!--                                     th:if="${representativemusic != null}"-->
+                        <!--                                     th:text="${representativemusic.productEntity.productName}"-->
+                        <!--                                     th:id="${representativemusic.productEntity.pId}">-->
+                        <!--                                </div>-->
+                        <!--                                <div class="musicname" style="font-size: 7px; color: black"-->
+                        <!--                                     th:unless="${representativemusic != null}"-->
+                        <!--                                     th:text="'대표음악이 없어요'">-->
+                        <!--                                </div>-->
+
+                        <!--                            </div>-->
+                        <!--                            &lt;!&ndash;              여기는 적용된음악 x 4&ndash;&gt;-->
+                        <!--                            <p class="musicname" th:each="havingmusic : ${belongingsList}" style="font-size: 7px"-->
+                        <!--                               th:text="${havingmusic.productEntity.productName}"-->
+                        <!--                               th:id="${havingmusic.productEntity.pId}">Aliciakeys-no one <input type="hidden"-->
+                        <!--                                                                                                 id="idinput"-->
+                        <!--                                                                                                 th:value="${representativemusic.User.id}">-->
+                        <!--                            </p>-->
+
+                        <!--                        </div>-->
+
+
+                        <!--                        <audio th:each="havingmusic : ${belongingsList}" controls class="hihi"-->
+                        <!--                               style="width: 100%; height: 20px; margin-top: 6px; display: none">-->
+                        <!--                            <source class="player" th:id="${'player'+ havingmusic.productEntity.pId}"-->
+                        <!--                                    th:src="@{${havingmusic.productEntity.productFileName}}" type='audio/mp3'/>-->
+                        <!--                        </audio>-->
+
+
+                        <!--여기김은석-->
+                        <!--여기김은석-->
+                        <!--여기김은석-->
+                        <!--여기김은석-->
+
+                    </div>
+                </div>
+
+                <div class="content-container">
+                    <div class="header content-title">
+                        <img src="/images/pencil.png" class="editButton" alt="수정버튼" onclick="titleEditBtn()">
+                        <div class="content-title-name" id="miniTitle"
+                             th:text="${loginUser.userPost.pageTitle}"
+                             th:utext="${loginUser.userPost.pageTitle}">
+                        </div>
+
+
+                        <div class="friendrequestbutton">
+                            <a href="#" id="friendRequestLink">일촌맺기</a>
+                        </div>
+
+
+
+                        <script>
+                            $(document).ready(function() {
+                                $("#friendRequestLink").on("click", function(e) {
+                                    e.preventDefault();
+                                    let confirmRequest = confirm("일촌신청을 하시겠습니까?");
+
+                                    if (confirmRequest) {
+                                        const currentUrl = new URL(window.location.href);
+                                        const urlParams = currentUrl.searchParams;
+                                        let userId = urlParams.get("userId");
+
+                                        $.ajax({
+                                            url: "/ilchon/MiniMain-view/" + userId,
+                                            type: "GET",
+                                            success: function(response) {
+                                                let userName = response; // 응답으로 받은 값이 사용자의 닉네임이라 가정합니다.
+                                                alert(userName + "님에게 일촌신청이 전송되었습니다!");
+
+                                                // 일촌신청이 완료되었을 때 '/beak' 엔드포인트로 count = 1 정보를 전송합니다.
+
+
+                                                const loginUsernickname = [[${session.loginUser.userNickName}]];
+
+
+
+                                                $.ajax({
+                                                    url: "/ilchonpatch/request",
+                                                    type: "POST",
+                                                    data: JSON.stringify({
+                                                        requesterNickName: loginUsernickname,
+                                                        receiverNickName: userName
+                                                    }),
+                                                    contentType: "application/json",
+                                                    success: function(response) {
+                                                        console.log(response); // 요청이 성공한 경우의 동작을 여기에 추가합니다.
+                                                    },
+                                                    error: function(xhr, status, error) {
+                                                        console.log(error);
+                                                        alert("일촌신청을 보내는 중에 오류가 발생했습니다.");
+                                                    }
+                                                });
+
+
+
+
+
+                                            },
+                                            error: function(xhr, status, error) {
+                                                console.log(error);
+                                                alert("일촌신청을 보내는 중에 오류가 발생했습니다.");
+                                            }
+                                        });
+                                    } else {
+                                        alert("일촌신청이 취소되었습니다.");
+                                    }
+                                });
+                            });
+                        </script>
+                        <div class="content-title-url"
+                             th:text=" 'https://'+ ${loginUser.userNickName} + '.helloWorld.com/'">
+                        </div>
+                    </div>
+
+
+                    <div class="box content-box">
+                        <div class="box-title">Updated news</div>
+                        <div class="news-flex-box">
+                            <div class="news-box">
+                                <div class="news-row">
+                                    <!--최근 다이어리 게시글 표출 -->
+                                    <div th:each="diary : ${recentDiaryPosts}">
+                                        <div class="news-item">
+                                            <div class="news-category category-post">다이어리</div>
+                                            <div class="news-title" th:text="${diary.title}"></div>
+                                        </div>
+                                    </div>
+                                    <!--최근 방명록 표출-->
+                                    <div th:each="guestBook : ${recentGuestBookPosts}">
+                                        <div class="news-item">
+                                            <div class="news-category category-guestbook">방명록</div>
+                                            <div class="news-title" th:text="${guestBook.content}"></div>
+                                        </div>
+                                    </div>
+                                    <!-- 최근 사진첩 게시글 표출-->
+                                    <div th:each="photo : ${recentPhotoGalleryPosts}">
+                                        <div class="news-item">
+                                            <div class="news-category category-pic">사진첩</div>
+                                            <div class="news-title" th:text="${photo.title}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="update-box">
+                                <div class="menu-row">
+                                    <div class="menu-item">다이어리<span class="menu-num" th:text="${todayPostCount} + '/' + ${totalPostCount}"></span></div>
+                                    <div class="menu-item">사진첩<span class="menu-num" th:text="${todayPhotoCount} + '/' + ${totalPhotoCount}"></span></div>
+                                </div>
+                                <div class="menu-row">
+                                    <div class="menu-item">방명록<span class="menu-num" th:text="${todayGuestbookCount} + '/' + ${totalGuestbookCount}"></span></div>
+                                    <div class="menu-item">전체글<span class="menu-num" th:text="${todayTotalCount} + '/' + ${totalTotalCount}"></span></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--            김은석이 넣은거-->
+                        <!--김은석이 넣은거-->
+                        <!--김은석이 넣은거-->
+                        <!--김은석이 넣은거-->
+                        <!--김은석이 넣은거-->
+                        <div id="belongingsData" th:text="${appliedbelongingsList}" style="display: none;"></div>
+                        <!--김은석이 넣은거-->
+
+                        <div class="miniroom">
+                            <div class="box-title">Miniroom</div>
+                            <p style="margin-bottom: 5px"></p>
+
+                            <div th:each="belongedwallpaper : ${wallpaperlist}" id="container" class="miniroom-gif-box"
+                                 style="width: 500px; height: 20px;  margin-left: 40px; position:relative; border: none">
+                                <img style="width: 100%; height: 90%; border: none"
+                                     th:src="@{${belongedwallpaper.productEntity.productFileName}}" alt="미니룸"/>
+                            </div>
+
+                            <!--              여기까지 김은석이 넣은거-->
+                            <!--              여기까지 김은석이 넣은거-->
+                            <!--              여기까지 김은석이 넣은거-->
+                            <!--              여기까지 김은석이 넣은거-->
+                            <!--              여기까지 김은석이 넣은거-->
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-container">
+                    <div class="menu-button">
+                        <a th:href="@{/gotohomebutdontrefreshmusiclist(userId=${loginUser.getId()})}">
+                            <button>홈</button>
+                        </a>
+                        <a th:href="@{/MiniDiary-view(userId=${loginUser.getId})}">
+                            <button>다이어리</button>
+                        </a>
+                        <a th:href="@{/MiniPicture-view(userId=${loginUser.getId})}">
+                            <button>사진첩</button>
+                        </a>
+                        <a th:href="@{/MiniGuest-view(userId=${loginUser.getId})}">
+                            <button>방명록</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="small-box-container">
+        <div class="Music-box"></div>
+
+    </div>
+
+
+</div>
+
+<script>
+    function editBtn() {
+        $('#content').attr('contenteditable', 'true');
+        $('#content').focus();
+    }
+
+    $('#content').keypress(function (event) {
+        let keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            event.preventDefault(); // 엔터 키 기본 동작 방지
+            saveContent();
+        }
+    });
+
+    function saveContent() {
+        let content = $('#content').text();
+        $.ajax({
+            type: 'POST',
+            url: '/updateStatus',
+            data: JSON.stringify({content: content}),
+            contentType: 'application/json',
+            success: function (data) {
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function titleEditBtn() {
+        $('#miniTitle').attr('contenteditable', 'true');
+        $('#miniTitle').focus();
+    }
+
+    $('#miniTitle').keypress(function (event) {
+        let keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            event.preventDefault();
+            saveTitle();
+        }
+    });
+
+    function saveTitle() {
+        let title = $('#miniTitle').text();
+        $.ajax({
+            type: 'POST',
+            url: '/updatePageTitle',
+            data: JSON.stringify({pageTitle: title}),
+            contentType: 'application/json',
+            success: function (data) {
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+    }
+    $(function() {
+        const loginUser = [[${session.loginUser.id}]];
+
+        const url = new URL(window.location.href);
+
+        const params = url.searchParams;
+
+        console.log(loginUser);
+        console.log(params.get("userId"));
+
+        if(params.get("userId") != null && params.get("userId") != loginUser) {
+            onmouseout()
+            console.log("1111111111111111111");
+            $(".editButton").hide();
+
+            $("#content").prop("contentEditable", false);
+
+            $(".friendrequestbutton").show();
+
+        } else {
+            console.log("@22222222222222222222222");
+            $(".editButton").show();
+            $("#content").prop("contentEditable", true);
+            $(".friendrequestbutton").hide();
+
+
+
+        }
+    });
+
+</script>
+</body>
+</html>

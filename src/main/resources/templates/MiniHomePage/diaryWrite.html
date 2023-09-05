@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>2021 MINI HOMEPAGE</title>
+    <link rel="shortcut icon" href="/images/favicon.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="/CSS/diary.css">
+    <link rel="stylesheet" href="/CSS/layout.css">
+    <link rel="stylesheet" href="/CSS/font.css">
+    <script src="https://kit.fontawesome.com/ab54b9d48d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="bookcover">
+        <div class="bookdot">
+            <div class="page">
+                <div class="profile-container">
+                    <div class="header profile-title font-neo">
+                        TODAY <span style="color:red" th:text="${todayVisitCount}"></span>
+                        |  TOTAL <span th:text="${totalVisitCount}"></span></div>
+                    <div class="box profile-box">
+                        <div class="profile-image">
+                            <img class="profile-image-img" th:src="@{'/uploads/' + ${profileImg}}" alt="프로필이미지">
+
+                        </div>
+                        <div class="profile-text font-kyobohand">
+                            <p th:text="${loginUser.userPost.content}"></p>
+                        </div>
+                        <div class="profile-username font-kyobohand">
+                            <span style="color: #0f1b5c" th:text="${loginUser.userNickName}"></span>
+                        </div>
+                        <div class="profile-dropdown">
+                            <div class="dropdown-content">
+                                <select onchange="redirectHome(this.value)" target="_blank">
+                                    <option value="">파도타기</option>
+                                    <script>
+                                        function redirectHome(userId) {
+                                            window.location.href = '/MiniMain-view?userId=' + userId;
+                                        }
+                                    </script>
+                                    <option th:each="user : ${users}" th:value="${user.id}"
+                                            th:text="${user.userName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-container">
+                    <div class="header content-title">
+                        <div class="content-title-name" id="miniTitle" th:text="${loginUser.userPost.pageTitle}"
+                             th:utext="${loginUser.userPost.pageTitle}" aria-readonly="true"></div>
+                        <div class="content-title-url"
+                             th:text=" 'https://'+ ${loginUser.userNickName} + '.helloWorld.com/'"></div>
+                    </div>
+                    <div class="box content-box">
+                        <div class="calendar">
+                            <div class="date-today" style="font-size: medium;"></div>
+                            <style>
+                                date-red {
+                                    color: red;
+                                }
+
+                                date-blue {
+                                    color: blue;
+                                }
+                            </style>
+                            <div class="date-list"></div>
+                            <script>
+                                // 날짜 업데이트 함수
+                                function updateCalendar() {
+                                    var dateList = document.querySelector(".date-list");
+                                    dateList.innerHTML = "";
+
+                                    // 현재 날짜 정보 가져오기
+                                    var currentDate = new Date().getDate();
+                                    var currentMonth = new Date().getMonth();
+                                    var currentYear = new Date().getFullYear();
+                                    var lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+                                    // 현재 월의 첫 날이 무슨 요일인지 계산
+                                    var firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+
+                                    // Today's Date를 현재 연도와 월로 바꾸기
+                                    var dateTodayElement = document.querySelector('.date-today');
+                                    dateTodayElement.innerHTML = currentYear + "<br/>" + (currentMonth + 1) + "월";
+
+                                    // 요일을 기록하기 위한 변수 초기화
+                                    var day = firstDayOfMonth;
+
+                                    // 1부터 해당 월의 마지막 날짜까지 날짜를 생성하면서 달력에 추가
+                                    for (var i = 1; i <= lastDayOfMonth; i++) {
+                                        var dateElement = document.createElement("div");
+                                        dateElement.classList.add("date");
+
+                                        var dateSpan = document.createElement("span");
+                                        dateSpan.textContent = i;
+
+                                        if (i === currentDate) {
+                                            dateSpan.style.color = "lightgreen";
+                                        } else if (day === 6) {
+                                            dateSpan.classList.add("date-blue");
+                                        } else if (day === 0) {
+                                            dateSpan.classList.add("date-red");
+                                        }
+
+                                        dateElement.appendChild(dateSpan);
+                                        dateList.appendChild(dateElement);
+
+                                        day = (day + 1) % 7; // 요일을 업데이트하는 부분 수정
+                                    }
+                                }
+
+                                // 페이지 로드 시 달력 업데이트
+                                updateCalendar();
+
+                                // 1분마다 달력 업데이트
+                                setInterval(updateCalendar, 60000);
+                            </script>
+                        </div>
+                        <!----------------------다이어리 스크롤 박스----------------------------------------------------------------->
+                        <div class="diary-scrollbox">
+                            <div class="diary">
+                                <div class="diary-date" id="currentDate"></div>
+
+                                <script>
+
+                                    <!--                                    diary 윗칸에 현재 시간 표기-->
+                                    function formatDate(date) {
+                                        var hours = date.getHours();
+                                        var minutes = date.getMinutes();
+                                        var ampm = hours >= 12 ? 'pm' : 'am';
+                                        hours = hours % 12;
+                                        hours = hours ? hours : 12; // the hour '0' should be '12'
+                                        minutes = minutes < 10 ? '0' + minutes : minutes;
+                                        var strTime = hours + ':' + minutes + ' ' + ampm;
+
+                                        var days = ['일', '월', '화', '수', '목', '금', '토'];
+                                        var dayName = days[date.getDay()];
+
+                                        return date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDate() + ". " + dayName + " " + strTime;
+                                    }
+
+                                    function updateTime() {
+                                        document.getElementById('currentDate').innerText = formatDate(new Date());
+                                    }
+
+                                    // Update time every second
+                                    setInterval(updateTime, 1000);
+                                </script>
+
+                                <!--일기 작성-->
+                                <div class="diary-contents">
+
+                                    <form th:action="@{/diaryWrite}" th:object="${diary}" th:method="post">
+                                        <div>
+                                            <label>Title</label>
+                                            <br>
+                                            <input type="text" th:field="*{title}"/>
+                                        </div>
+                                        <div>
+                                            <label>Content</label>
+                                            <br>
+                                            <textarea id="content" th:field="*{content}"
+                                                      style="width: 462px; height: 150px;"></textarea>
+                                        </div>
+                                        <div>
+                                            <input type="submit" value="Save"/>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+                            </div>
+                            <div class="button-box">
+                                <button class="diary-button font-neo" onclick="getTextFile()">
+                                    <i class="fas fa-lock"></i>현아의 비밀 일기 보기
+                                </button>
+                            </div>
+                            <div class="diary" id="secret-box">
+                                <div class="diary-date">현아의 비밀 일기</div>
+                                <div class="diary-contents font-kyobohand" id="secret-diary"></div>
+                            </div>
+                        </div>
+                        <!--------------------------------------------------------------------------------------->
+
+
+                    </div>
+                </div>
+
+                <div class="menu-container">
+                    <div class="menu-button">
+                        <a th:href="@{/MiniMain-view(userId=${loginUser.getId()})}">
+                            <button>홈</button>
+                        </a>
+                        <a th:href="@{/MiniDiary-view(userId=${loginUser.getId()})}">
+                            <button>다이어리</button>
+                        </a>
+                        <a th:href="@{/MiniPicture-view(userId=${loginUser.getId()})}">
+                            <button>사진첩</button>
+                        </a>
+                        <a th:href="@{/MiniGuest-view(userId=${loginUser.getId()})}">
+                            <button>방명록</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="small-box-container">
+        <div class="Music-box"></div>
+    </div>
+</div>
+<script>
+    function getTextFile() {
+        var input = document.createElement("input");
+        input.type = "file";
+        input.accept = "text/plain";
+        input.onchange = function (event) {
+            processFile(event.target.files[0]);
+        };
+        input.click();
+    }
+
+    function processFile(file) {
+        var reader = new FileReader();
+        reader.readAsText(file, "utf-8");
+
+        reader.onload = function () {
+            document.getElementById("secret-diary").innerText = reader.result;
+            document.getElementById("secret-box").style.display = "block";
+        };
+    }
+</script>
+</body>
+</html>

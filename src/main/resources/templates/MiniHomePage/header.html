@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Header Fragment</title>
+</head>
+<body>
+<div th:fragment="header">
+  <div class="header profile-title font-neo">
+    TODAY <span style="color:red" th:text="${loginUser.visitCount.todayVisitCount}"></span>
+    |  TOTAL <span th:text="${loginUser.visitCount.totalVisitCount}"></span>
+  </div>
+  <div class="box-profile-box">
+    <div class="profile-image">
+      <img class="profile-image-img" src="/images/cyfeeling.jpeg" alt="프로필이미지">
+    </div>
+    <div class="profile-text font-kyobohand">
+      <p id="content" contenteditable="true" th:text="${loginUser.userPost.content}" th:utext="${loginUser.userPost.content}"></p>
+      <img src="/images/pencil.png" class="editButton" alt="수정버튼" onclick="editBtn()">
+    </div>
+    <div class="profile-username font-kyobohand">
+      <span style="color: #0f1b5c" th:text="${loginUser.userNickName}"></span>
+    </div>
+    <div class="profile-dropdown">
+      <div class="dropdown-content">
+        <select onchange="redirectHome(this.value)" target="_blank">
+          <option value="">파도타기</option>
+          <script>
+            function redirectHome(userId) {
+              window.location.href = '/MiniMain-view?userId=' + userId;
+            }
+          </script>
+          <option th:each="user : ${users}" th:value="${user.id}"
+                  th:text="${user.userName}"></option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

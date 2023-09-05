@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>join</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="/CSS/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&family=Libre+Baskerville&family=Single+Day&family=Stylish&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div>
+    <div class="slideshow-container">
+        <div class="Slides-background">
+            <div class="mySlides fade">
+            <img src="/images/cyback.jpeg" class="slideshow-image">
+            </div>
+            <div class="mySlides fade">
+                <img src="/images/cyback2.jpeg" class="slideshow-image">
+            </div>
+            <div class="mySlides fade">
+                <img src="/images/cyback3.jpeg" class="slideshow-image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--로그인 폼-->
+<div class="login-wrapper">
+    <div class="logo-container">
+        <img src="/images/hwlogo.png" alt="Logo">
+    </div>
+    <form method="post" action="/login" id="login-form">
+        <div class="input-container">
+            <label for="userName">아이디</label>
+            <input type="text" name="userName" id="userName" placeholder="ID">
+        </div>
+        <div class="input-container">
+            <label for="userPassword">비밀번호</label>
+            <input type="password" name="password" id="userPassword" placeholder="Password">
+        </div>
+        <label for="remember-check">
+            <input type="checkbox" id="remember-check">아이디 저장하기
+        </label>
+        <div class="button-container">
+            <input type="submit" value="접속">
+        </div>
+    </form>
+
+    <!--회원가입 및 찾기 폼-->
+    <div class="look-container">
+        <a href="/join" class="button1">회원가입</a>
+        <a href="/homeP" class="button2">홈피 바로가기</a>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-gif">
+        <img src="/images/ani_santa_3x.gif">
+    </div>
+    <p>&copy; 2023 My Company. All rights reserved.</p>
+</footer>
+<script>
+    function fadeIn(element, opacity) {
+        let timer = setInterval(function () {
+            if (opacity >= 1) {
+                clearInterval(timer);
+            }
+            element.style.opacity = opacity;
+            opacity += 0.01; // 부드러운 페이드인 효과를 위해 0.01씩 증가시킴
+        }, 10); // 10밀리초마다 업데이트
+    }
+
+    function fadeOut(element, opacity) {
+        let timer = setInterval(function () {
+            if (opacity <= 0) {
+                clearInterval(timer);
+            }
+            element.style.opacity = opacity;
+            opacity -= 0.01; // 부드러운 페이드아웃 효과를 위해 0.01씩 감소시킴
+        }, 10); // 10밀리초마다 업데이트
+    }
+
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        let slides = document.getElementsByClassName("mySlides");
+        let currentSlide = slides[slideIndex];
+        let nextSlideIndex = (slideIndex + 1) % slides.length;
+        let nextSlide = slides[nextSlideIndex];
+
+        fadeOut(currentSlide, 1); // 현재 슬라이드를 페이드아웃
+        fadeIn(nextSlide, 0); // 다음 슬라이드를 페이드인
+
+        slideIndex = nextSlideIndex;
+
+        setTimeout(showSlides, 3000); // 이미지 전환 간격 (3초)
+    }
+
+    // 초기 슬라이드 표시
+    let slides = document.getElementsByClassName("mySlides");
+    slides[0].style.opacity = 1;
+
+
+    // URL에서 쿼리스트링 파라미터 값을 가져오는 함수
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        let results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+
+    $(document).ready(function() {
+        $("#login-form").submit(function(event) {
+            event.preventDefault(); // 폼의 기본 동작을 막음
+
+            let userName = $("#userName").val();
+            let password = $("#userPassword").val();
+
+            // 로그인 요청 전송
+            $.post("/login", { userName: userName, password: password })
+                .done(function(data) {
+                    // 로그인 성공 시 처리
+                    window.location.href = "/home"; // 홈페이지로 리다이렉트
+                })
+                .fail(function(data) {
+                    // 로그인 실패 시 처리
+                    alert("아이디 또는 비밀번호가 올바르지 않습니다."); // 경고창 표시
+                    location.reload(); // 페이지 새로고침
+                });
+        });
+    });
+</script>
+</body>
+</html>

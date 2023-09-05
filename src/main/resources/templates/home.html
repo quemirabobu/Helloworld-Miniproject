@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&family=Libre+Baskerville&family=Single+Day&family=Stylish&display=swap"
+          rel="stylesheet">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+    <style>
+
+        a{
+            color: inherit; /* 현재 요소의 상속된 색상 사용 */
+            text-decoration: none; /* 밑줄 제거 */
+        }
+        body {
+            font-family: 'Stylish', sans-serif;
+        }
+
+        #logout {
+            cursor: pointer;
+            background-color: #ffcc00;
+            height: 20px;
+            width: 90px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            position: absolute;
+            right: 0;
+            font-size: 11px;
+            color: #333;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+
+        #logout:hover {
+            background-color: #ff9900;
+            color: #fff;
+        }
+
+        #banner {
+            width: 100%;
+            height: 55px;
+            background-color: orange;
+            display: flex;
+            align-items: center;
+        }
+
+        .bannerbutton {
+            width: 12%;
+            background-color: #eaa013;
+            height: 100%;
+            align-items: center;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            border-right: solid white 3px;
+            border-left: solid white 3px;
+            margin-right: 5px;
+            font-size: 19px;
+            color: #ffffff;
+            text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        }
+
+        #content {
+            display: flex;
+            justify-content: center;
+        }
+
+        #infobox {
+            width: 300px;
+            height: 375px;
+            background-color: #ffffff;
+            border: solid orange 3px;
+            display: flex;
+            justify-content: center;
+            border-radius: 8px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #leftimg {
+            display: flex;
+
+            width: 600px;
+            height: 380px;
+            margin-right: 10px;
+        }
+
+        #back {
+            position: relative;
+            height: 1000px;
+            /*background-image: url('1111.png');*/
+            background-color: rgba(255, 255, 255, 0.1); /* adjust opacity here */
+        }
+
+        #minimiwithinfo {
+            display: flex;
+        }
+
+        #minimi > img {
+            width: 100px;
+        }
+
+        #rightinfo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #minimi {
+            margin-right: 10px;
+        }
+
+        #rightinfo p {
+            /*이름 투데이 이런 정보*/
+            font-weight: bolder;
+            line-height: 30px;
+        }
+
+        #infobox > p {
+            /*김은석님의 미니홈피*/
+            margin: 12px;
+            font-weight: bolder;
+            line-height: 30px;
+
+        }
+
+
+
+        /*여기부터 김은석 넣을거*/
+        /*여기부터 김은석 넣을거*/
+        /*여기부터 김은석 넣을거*/
+        /*여기부터 김은석 넣을거*/
+        /*여기부터 김은석 넣을거*/
+        /*여기부터 김은석 넣을거*/
+        .speech-bubble {
+            width: 200px;
+            background-image: url('https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbPV8Vl%2FbtsmRmNd6Pk%2FfUwyR3pls76aUrdzoaHKEK%2Fimg.png');
+            background-size: 170px;
+            background-repeat: no-repeat;
+            position: relative;
+            margin-right: -10px;
+        }
+
+
+        .text-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            text-align: center;
+        }
+    </style>
+    <script>
+
+            window.onload = function () {
+
+                $.ajax({
+                    type: "GET",
+                    url: "http://openapi.seoul.go.kr:8088/6d4d776b466c656533356a4b4b5872/json/RealtimeCityAir/1/99",
+                    data: {},
+                    success: function (response) {
+                        let rows = response["RealtimeCityAir"]["row"][21];
+
+                        let gu_name = rows['MSRSTE_NM'];
+                        let gu_mise = rows['IDEX_MVL'];
+
+                        let pollutionvalue = $('#pollutionvalue');
+                        let pollutioninfo = $('#pollutioninfo');
+                        let inclamation = $('#inclamation');
+                        let infoo = $('#infoo');
+
+
+                        pollutionvalue.text(gu_mise);
+
+                        if (gu_mise <= 50) {
+                            pollutionvalue.css('color', 'green');
+                            pollutioninfo.css('color', 'green');
+                            pollutioninfo.text('좋음');
+                            inclamation.text('날씨 조오타');
+                            infoo.text('나가놀자!');
+                            inclamation.css('color', 'blue');
+                            infoo.css('color', 'blue');
+
+                        } else if (gu_mise <= 100) {
+                            pollutionvalue.css('color', 'orange');
+                            pollutioninfo.css('color', 'orange');
+                            pollutioninfo.text('애매');
+                            inclamation.text('좀 애매한디');
+                            infoo.text('걍 나가놀자!');
+                            inclamation.css('color', 'orange');
+                            infoo.css('color', 'orange');
+                        } else {
+                            pollutionvalue.css('color', 'red');
+                            pollutioninfo.css('color', 'red');
+                            pollutioninfo.text('나쁨');
+                            inclamation.text('날씨안좋네..');
+                            infoo.text('나가지말자!');
+                            inclamation.css('color', 'red');
+                            infoo.css('color', 'red');
+                        }
+                    }
+                });
+        }
+            var count = [[${request}]];
+            let userName = "[[${userName}]]";
+            if (count > 0) {
+                var result = confirm(userName + "님의 일촌 신청입니다!!수락하시겠습니까?");
+                if (result) {
+                    // 예를 선택한 경우의 작업을 여기에 추가합니다.
+                    alert("일촌신청이 완료되었습니다!");
+                    // 예를 선택한 후 수행할 작업을 추가합니다.
+                    var count1 = 2
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/ilchon/beak",
+                        data: {
+                            count: count1,
+                            userName: userName
+                        },
+                        success: function (response) {
+                            // 서버로부터의 응답을 처리하는 부분을 추가할 수 있습니다.
+                        },
+                        error: function (xhr, status, error) {
+                            // 에러 처리를 위한 코드를 추가할 수 있습니다.
+                        }
+                    });
+                } else {
+                    // 아니오를 선택한 경우의 작업을 여기에 추가합니다.
+                    alert("일촌신청이 거절되었습니다!");
+                    var count1 = 3;
+                    $.ajax({
+                        type: "GET",
+                        url: "/ilchon/beak",
+                        data: {
+                            count: count1,
+                            userName: userName
+                        },
+                        success: function (response) {
+                            // 서버로부터의 응답을 처리하는 부분을 추가할 수 있습니다.
+                        },
+                        error: function (xhr, status, error) {
+                            // 에러 처리를 위한 코드를 추가할 수 있습니다.
+                        }
+                    });
+                    // 아니오를 선택한 후 수행할 작업을 추가합니다.
+                }
+            }
+
+
+
+
+
+
+    </script>
+</head>
+
+<body>
+<div id="banner">
+    <div id="mingyupush" style="width: 24%"></div>
+    <div  onclick="window.location.href='/home'" style="height: 100%">
+        <img id="logo"
+             src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcdF9J4%2FbtskRufcTKP%2FmAHqe1WxB0eyLRqjxKR5kK%2Fimg.png"
+             style="height: 100%" alt="">
+    </div>
+
+    <div class="bannerbutton " id="myroom"><a href="/myPage">마이룸</a></div>
+
+    <div class="bannerbutton" id="purchase" ><a href="/miniroom">구매</a></div>
+    <div class="bannerbutton" id="charge"><a href="/cash">충전</a></div>
+    <div class="logoutbox" style="position: absolute; top: 10px;right: 11px ">
+        <p style="margin-bottom: 3px;margin-top: 4px;font-size: 13px;color: #5e5c5c" th:text="${session.loginUser.userName} + '님 환영합니다'"></p>
+        <button id="logout" onclick="confirmLogout()">
+            로그아웃
+        </button>
+
+    </div>
+</div>
+<p style="font-size: 4px"></p>
+<div style="background-color: #ea8a8a;height: 4px; margin-top: 4px"></div>
+<!--<p style="font-size: 40px"></p>-->
+<div style=" height: 800px" id="back">
+    <div style="height: 50px"></div>
+    <div id="content">
+
+        <img id="leftimg"
+             src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FlSAt0%2FbtskQRWjayg%2FLX6Iy4nUR6u3p3iJwKLrc0%2Fimg.png"
+             alt="">
+
+        <div id="infobox">
+
+            <p style="font-size: 30px;font-weight: bold; color: #ff8d1c" th:text="${session.loginUser.userName} + '님의 미니홈피'"></p>
+            <p style=" font-size: 6px"></p>
+            <div id="minimiwithinfo" style="display: flex; justify-content: center">
+
+                <!--                <div id="minimi"><img-->
+                <!--                        th:src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbSXLkK%2FbtskQimK94Y%2F1UQXpfIXVpe836e44MtVi1%2Fimg.png"-->
+                <!--                        alt=""></div>-->
+
+
+                <div id="minimi" style="margin-left: 10px; width: 100px; height: 236px">
+                    <img style="margin-left: 10px" th:if="${minimi.productEntity}" th:src="@{${minimi.productEntity.productFileName}}" alt="">
+                    <img th:unless="${minimi.productEntity}" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbSXLkK%2FbtskQimK94Y%2F1UQXpfIXVpe836e44MtVi1%2Fimg.png" alt="">
+                </div>
+                <div class="speech-bubble">
+                    <div class="text-content">
+                        <h3>오늘의 날씨정보</h3>
+                        <!--                                <p th:text="${pollutionintro}"></p>-->
+                        <p>AQI수치 : <span id="pollutionvalue"  style=""></span></p>
+                        <p>AQI판단 : <span id="pollutioninfo"  style=""></span></p>
+                        <!--                        <p>온도 : <span id="temperature" th:text="${temperature}" style=""></span></p>-->
+                        <!--                        <p>강수량 : <span id="rain" th:text="${rain}" style=""></span></p>-->
+                        <!--                        <p>습도 : <span id="humidity" th:text="${humidity}" style=""></span></p>-->
+                        <!--                        <p>풍속 : <span id="wind" th:text="${wind}" style=""></span></p>-->
+                        <p>...</p>
+                        <p style="margin-bottom: 8px">...</p>
+                        <p  id="inclamation">이야!</p>
+                        <p  id="infoo">외출하기 좋은날!</p>
+                    </div>
+                </div>
+
+
+                <!--                <div id="rightinfo">-->
+                <!--                    <p>이름 : <span style="color: #ff3100; font-weight: bold" th:text="${loginUser2.userName}"></span>-->
+                <!--                    </p>-->
+                <!--                    <p>Today : <span style="color: #ff3100; font-weight: bold">43</span></p>-->
+                <!--                    <p>NewComment:<span style="color: #ff3100; font-weight: bold">9</span></p>-->
+                <!--                    <p>일촌신청:<span style="color: #ff3100; font-weight: bold">10</span></p>-->
+                <!--                    <p>로그인중인일촌:<span style="color: #ff3100; font-weight: bold">24</span></p>-->
+                <!--                    <p>판매요청:<span style="color: #ff3100; font-weight: bold">19</span></p>-->
+                <!--                </div>-->
+            </div>
+
+        </div>
+    </div>
+
+    <div id="systemoutoutline" style="display: flex; justify-content: center">
+        <button id="enterbutton" th:class="${session.loginUser.userName}"
+                style="background-color: #ea6e23;width: 550px;height: 50px; box-shadow: none;border-radius: 8px; margin-top: 20px;color: white;font-size: 20px;font-weight: bold" th:attr="data-user-id=${session.loginUser.id}">
+            System.out.println(Hello.world)
+        </button>
+
+    </div>
+    <div style="text-align: center; margin-top: 20px;font-size: 14px">
+        @Copyright HelloWorld
+    </div>
+
+</div>
+
+</body>
+
+<script>
+    $("#enterbutton").on("click",function (){
+        let width = 1250;
+        let height = 850;
+
+        // 여기 김은석이 넣엇다
+        let userId = $(this).data("userId");
+        let userclass = $(this).attr("class");
+        let wef = $(this).attr("id");
+        console.log(userId);
+        console.log(userclass);
+        console.log(wef);
+        // 여기 김은석이 넣엇다
+
+
+
+        let width2 = 302;
+        let height2 = 605;
+
+        // 사용 가능한 뷰포트 크기를 기준으로 중앙 위치를 계산합니다
+        let left = window.screenLeft + (window.outerWidth / 2) - (width / 2);
+        let top = window.screenTop + (window.outerHeight / 2) - (height / 2);
+
+        // window.open을 이용하여 팝업을 엽니다
+        // let popupWindow = window.open("/MiniMain-view", "Hello, World", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",resizable=yes");
+
+        // 여기 김은석이넣엇다
+        let popupWindow = window.open("/letsgotohompie/" + userId, "Hello, World", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",resizable=yes");
+
+
+        // let musicq = window.open("/musicq", "himusic", "width=" + width2 + ",height=" + height2 + ",left=" + left+40 + ",top=" + top+40 + ",resizable=yes");
+
+        // 팝업 창의 크기가 변경되면 팝업 크기를 다시 설정합니다
+        popupWindow.onresize = () => {
+            popupWindow.resizeTo(width, height);
+        }
+    });
+
+    function confirmLogout() {
+        if (confirm("정말 로그아웃 하시겠습니까?")) {
+            // "Yes"를 선택한 경우 로그아웃을 수행하는 URL로 리다이렉트
+            window.location.href = "/logout";
+        } else {
+            // "No"를 선택한 경우 아무 동작도 수행하지 않음
+        }
+    }
+</script>
+</html>
